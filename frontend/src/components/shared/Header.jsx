@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FaSearch } from "react-icons/fa";
+import { Button } from '../ui/button';
 
 
 const Header = () => {
@@ -25,7 +26,7 @@ const Header = () => {
           <Link to={'/news'} className='hover:underline'>News Articles</Link>
         </div>
         <Link to={'/sign-in'}>
-          <button className='bg-slate-900  p-2 pl-3 pr-3  text-white rounded-lg'>Sign In</button>
+          <Button>Sign In</Button>
         </Link>
       </div>
     </nav>

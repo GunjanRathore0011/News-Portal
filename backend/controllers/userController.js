@@ -2,11 +2,12 @@ const User=require("../models/userModel");
 const bcrypt=require("bcrypt");
 const jwt=require("jsonwebtoken");
 const cookie= require("cookie-parser");
-
+const { response } = require("express");
+require("dotenv").config();
 
 // sign up ka handler
 
-export const signup= async(req,res)=>{
+exports.signup= async(req,res)=>{
     try{
 
         const {userName, email, password}=req.body;
@@ -18,9 +19,10 @@ export const signup= async(req,res)=>{
             })
         }
 
-        const user=await User.find({email});
+        const user=await User.findOne({email});
+        // console.log(user);
         if(user){
-            return res.signup(401).json({
+            return res.status(401).json({
                 success: false,
                 message: "User already exists.",
             })
@@ -37,25 +39,27 @@ export const signup= async(req,res)=>{
             });
         }
 
-        const newUser=await User.create({userName,email , password});   
+        const newUser=await User.create({userName,email ,password: hashedPassword});   
+        // console.log(newUser);
         return res.status(200).json({
             success: true,
             message: "User signup successfully.",
+            // newUser,
         })     
     }
     catch(error){
         console.log(error);
         return res.status(500).json({
-            success: true,
+            success: false,
             message: "Error in sign up.",
-            newUser,
+           
         })
     }
 }
 
 // login ka handler
 
-export const login=async(req,res)=>{
+exports.login=async(req,res)=>{
     try{
         const {email,password}=req.body;
 
@@ -66,21 +70,53 @@ export const login=async(req,res)=>{
             })
         }
 
-        const user=await User.find({email});
+        let user=await User.findOne({email});
 
         if(!user){
-            return res.signup(401).json({
+            return res.status(401).json({
                 success: false,
                 message: "User does not exists.",
             })
         }
+        if(await bcrypt.compare(password, user.password)){
+            // create token and send with user data
+            const payload={
+                email: user.email,
+                id: user._id,
+            };
+            let token=jwt.sign(payload,process.env.JWT_SECRET,{
+                expiresIn: "10h"
+            })
 
+            user.password=undefined;
+            user=user.token;
+
+            const options={
+                    expires: new Date(Date.now() + 3*24*60*60*1000),
+                    httpOnly: true,
+            }
+            res.cookie("token",token,options)
+                .status(200).json({
+                    success: true,
+                    token,
+                    user,
+                    message:"User logged in successfully."
+                })
+
+        }
+        else{
+            return res.status(403).json({
+                success: false,
+                message: "Password does not match.",
+            })
+        }
+        
         
     }
     catch(error){
         console.log(error);
         return res.status(500).json({
-            success: true,
+            success: false,
             message: "Error in login.",
         })
     }
