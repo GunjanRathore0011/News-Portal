@@ -1,6 +1,13 @@
 const express=require("express");
 const app=express();
+require("dotenv").config();
+const dbconnect=require("./config/database");
 
-app.listen(4000,()=>{
-    console.log("Server started successfully.");
+// port number
+const PORT=process.env.PORT;
+// connect with database;
+dbconnect();
+
+app.listen(PORT,()=>{
+    console.log(`Server started successfully at port ${PORT}.`);
 })
