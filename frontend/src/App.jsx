@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard"
 import NewsArticle from "./pages/NewsArticle"
 import About from "./pages/About"
 import Header from "./components/shared/Header"
+import { Toaster } from "./components/ui/toaster"
 
 function App() {
   
@@ -22,6 +23,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard/>} /> 
         <Route path="/news" element={<NewsArticle/>} /> 
       </Routes>
+
+      <Toaster />
+
     </BrowserRouter>
   )
 }

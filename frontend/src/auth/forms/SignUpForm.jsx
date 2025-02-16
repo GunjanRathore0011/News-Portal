@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -14,6 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useToast } from '@/hooks/use-toast'
+import { Title } from '@radix-ui/react-toast'
 
 const formSchema = z.object({
   userName: z
@@ -21,7 +23,7 @@ const formSchema = z.object({
     .min(2, { message: "Username must be atleast 2 characters" }).max(50),
   email: z
     .string()
-    .min({ message: "Invalid email address" }).max(50),
+    .email({ message: "Invalid email address" }).max(50),
   password: z
     .string()
     .min(8, { message: "Password must be atleast 8 characters" }).max(50),
@@ -30,6 +32,10 @@ const formSchema = z.object({
 
 const SignUpForm = () => {
 
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [errMessage, setErrMessage] = useState(null);
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -41,10 +47,37 @@ const SignUpForm = () => {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values) {
+    try {
+      setLoading(true);
+      setErrMessage(null);
+
+      const res = await fetch("/api/v1/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await res.json();
+
+      if (data.success == false) {
+        setLoading(false);
+        toast({ title: "Sign up Failed! Please try again." })
+        return setErrMessage(data.message);
+      }
+      setLoading(false);
+      if (res.ok) {
+        toast({ title: "Sign up successfully." })
+        navigate("/sign-in")
+      }
+
+    }
+    catch (error) {
+      setErrMessage(error.message);
+      toast({ title: "Something went wrong." })
+      setLoading(false);
+    }
   }
 
   return (
@@ -113,24 +146,36 @@ const SignUpForm = () => {
 
                     <FormControl>
                       <Input type="password" placeholder="Password"
-                       {...field} 
-                       />
+                        {...field}
+                      />
                     </FormControl>
 
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+
+
               <Button type="submit" className='bg-blue-500 w-full' >
-                Sign up
-                </Button>
+                {
+                  loading ? (<span className='animate-pulse'>Loading...</span>)
+                    :
+                    (<span>Sign Up</span>)
+                }
+              </Button>
             </form>
           </Form>
 
           <div className='flex gap-2 text-sm mt-5' >
-              <span>Have an account?</span>
-                <Link className='text-blue-500' to={'/sign-in'}>Sign In</Link>
+            <span>Have an account?</span>
+            <Link className='text-blue-500' to={'/sign-in'}>Sign In</Link>
           </div>
+
+          {/* Display error message if exists */}
+          {errMessage && (
+            <p className="text-red-500 mt-5">{errMessage}</p>
+          )}
 
         </div>
       </div>

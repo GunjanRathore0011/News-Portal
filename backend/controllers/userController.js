@@ -13,20 +13,23 @@ exports.signup= async(req,res)=>{
         const {userName, email, password}=req.body;
 
         if(!userName || !email || !password ){
-            return res.status(402).json({
+            return res.status(400).json({
                 success: false,
                 message: "All fields are required.",
             })
         }
 
-        const user=await User.findOne({email});
-        // console.log(user);
-        if(user){
-            return res.status(401).json({
-                success: false,
-                message: "User already exists.",
-            })
-        }
+        // Check if userName or email already exists
+    const existingUser = await User.findOne({
+        $or: [{ email }, { userName }],
+      });
+  
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Username or Email already exists. Please choose a different one.",
+        });
+      }
 
         let hashedPassword;
         try {
@@ -41,7 +44,7 @@ exports.signup= async(req,res)=>{
 
         const newUser=await User.create({userName,email ,password: hashedPassword});   
         // console.log(newUser);
-        return res.status(200).json({
+        return res.status(201).json({
             success: true,
             message: "User signup successfully.",
             // newUser,
