@@ -8,6 +8,7 @@ import NewsArticle from "./pages/NewsArticle"
 import About from "./pages/About"
 import Header from "./components/shared/Header"
 import { Toaster } from "./components/ui/toaster"
+import Footer from "./components/shared/Footer"
 
 function App() {
   
@@ -26,6 +27,7 @@ function App() {
 
       <Toaster />
 
+      <Footer></Footer>
     </BrowserRouter>
   )
 }
