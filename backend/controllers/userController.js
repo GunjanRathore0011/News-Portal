@@ -60,9 +60,9 @@ exports.signup= async(req,res)=>{
     }
 }
 
-// login ka handler
+// signin ka handler
 
-exports.login=async(req,res)=>{
+exports.signin=async(req,res)=>{
     try{
         const {email,password}=req.body;
 
@@ -88,7 +88,7 @@ exports.login=async(req,res)=>{
                 id: user._id,
             };
             let token=jwt.sign(payload,process.env.JWT_SECRET,{
-                expiresIn: "10h"
+                expiresIn: "2h"
             })
 
             user.password=undefined;
@@ -120,7 +120,7 @@ exports.login=async(req,res)=>{
         console.log(error);
         return res.status(500).json({
             success: false,
-            message: "Error in login.",
+            message: "Error in signin.",
         })
     }
 }
