@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { useToast } from '@/hooks/use-toast'
 import { Title } from '@radix-ui/react-toast'
+import { signInFailure, signInStart, signInSuccess } from '@/redux/user/userSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 const formSchema = z.object({
   email: z
@@ -31,9 +33,12 @@ const SignInForm = () => {
 
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [errMessage, setErrMessage] = useState(null);
-  // 1. Define your form.
+  const dispatch=useDispatch();
+  const {loading,error}=useSelector((state)=>state.user);
+
+  // const [loading, setLoading] = useState(false);
+  // const [errMessage, setErrMessage] = useState(null);
+  // // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,8 +50,9 @@ const SignInForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values) {
     try {
-      setLoading(true);
-      setErrMessage(null);
+      // setLoading(true);
+      // setErrMessage(null);
+      dispatch(signInStart());
 
       const res = await fetch("/api/v1/signin", {
         method: "POST",
@@ -58,21 +64,23 @@ const SignInForm = () => {
       const data = await res.json();
 
       if (data.success == false) {
-        setLoading(false);
+        // setLoading(false);
         toast({ title: "Sign in Failed! Please try again." })
-        return setErrMessage(data.message);
+        // return setErrMessage(data.message);
+        dispatch(signInFailure(data.message));
       }
-      setLoading(false);
       if (res.ok) {
+        dispatch(signInSuccess(data))
         toast({ title: "Sign in successfully." })
         navigate("/")
       }
 
     }
     catch (error) {
-      setErrMessage(error.message);
+      // setErrMessage(error.message);
       toast({ title: "Something went wrong." })
-      setLoading(false);
+      // setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   }
 
@@ -136,7 +144,7 @@ const SignInForm = () => {
 
 
 
-              <Button type="submit" className='bg-blue-500 w-full' >
+              <Button type="submit" className='bg-blue-500 w-full'  >
                 {
                   loading ? (<span className='animate-pulse'>Loading...</span>)
                     :
@@ -152,8 +160,8 @@ const SignInForm = () => {
           </div>
 
           {/* Display error message if exists */}
-          {errMessage && (
-            <p className="text-red-500 mt-5">{errMessage}</p>
+          {error && (
+            <p className="text-red-500 mt-5">{error}</p>
           )}
 
         </div>
