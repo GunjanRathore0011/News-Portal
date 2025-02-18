@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast'
 import { Title } from '@radix-ui/react-toast'
 import { signInFailure, signInStart, signInSuccess } from '@/redux/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import GoogleAuth from '@/components/shared/GoogleAuth'
 
 const formSchema = z.object({
   email: z
@@ -151,6 +152,8 @@ const SignInForm = () => {
                     (<span>Sign In</span>)
                 }
               </Button>
+              
+              <GoogleAuth></GoogleAuth>
             </form>
           </Form>
 

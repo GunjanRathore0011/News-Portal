@@ -124,3 +124,44 @@ exports.signin=async(req,res)=>{
         })
     }
 }
+
+exports.google=async(req,res)=>{
+    try{
+
+        const {userName,email,password}=req.body;
+
+        const userExist=await User.findOne({email});
+        const userKaName=await User.findOne({userName});
+
+        if(userExist){
+            return res.status(200).json({
+                success: true,
+                message: "User sign in",
+            })
+        }
+        let hashedPassword;
+        try {
+ 
+            hashedPassword=await bcrypt.hash(password,10)
+            console.log(hashedPassword);
+
+        } catch (error) {
+            console.log("Error in hashing the password ",error)
+        }
+        console.log("create ni kr skte")
+        const newUser= await User.create({userName,email,password});
+        console.log(newUser);
+        return res.status(200).json({
+            success: true,
+            message: "User sign up",
+        })
+
+    }
+    catch(error){
+        console.log("Error in signIn/signUp using google.",error);
+        res.status(500).json({
+            success: false,
+            message: "Cannot authenticate using google.",
+        })
+    }
+}

@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useToast } from '@/hooks/use-toast'
 import { Title } from '@radix-ui/react-toast'
+import GoogleAuth from '@/components/shared/GoogleAuth'
 
 const formSchema = z.object({
   userName: z
@@ -164,6 +165,8 @@ const SignUpForm = () => {
                     (<span>Sign Up</span>)
                 }
               </Button>
+
+              <GoogleAuth></GoogleAuth>
             </form>
           </Form>
 
