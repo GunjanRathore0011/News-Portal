@@ -71,7 +71,7 @@ const SignInForm = () => {
         dispatch(signInFailure(data.message));
       }
       if (res.ok) {
-        dispatch(signInSuccess(data))
+        dispatch(signInSuccess(data.user))
         toast({ title: "Sign in successfully." })
         navigate("/")
       }

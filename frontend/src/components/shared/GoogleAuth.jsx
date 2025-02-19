@@ -16,12 +16,13 @@ const GoogleAuth = () => {
     provider.setCustomParameters({ prompt: "select_account" })
     try {
       const firebaseResponse = await signInWithPopup(auth, provider)
-      console.log("Yeh hai firebase ka response", firebaseResponse);
+      // console.log("Yeh hai firebase ka response", firebaseResponse);
       // connecting with the api
       const values = {
         userName: firebaseResponse.user.uid,
         email: firebaseResponse.user.email,
         password: firebaseResponse.user.uid,
+        profilePicture: firebaseResponse.user.photoURL,
       }
       const res = await fetch("/api/v1/google", {
         method: "POST",
@@ -32,15 +33,15 @@ const GoogleAuth = () => {
       });
       const data = await res.json();
       if (data.success == false) {
-        Toast({ title: "Sign in Failed! Please try again." })
+        toast({ title: "Sign in Failed! Please try again." })
         dispatch(signInFailure(data.message));
       }
       if (res.ok) {
-        dispatch(signInSuccess(data))
+        dispatch(signInSuccess(data.user))
         toast({ title: "Sign in successfully." })
         navigate("/")
       }
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log("error in sign up", error)
     }

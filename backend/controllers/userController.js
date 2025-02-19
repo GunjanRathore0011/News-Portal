@@ -41,8 +41,9 @@ exports.signup= async(req,res)=>{
                 message: "Error in hasing password",
             });
         }
+        const profilePicture=`https://api.dicebear.com/5.x/initials/svg?seed=${userName} ${""}`
 
-        const newUser=await User.create({userName,email ,password: hashedPassword});   
+        const newUser=await User.create({userName,email ,password: hashedPassword,profilePicture});   
         // console.log(newUser);
         return res.status(201).json({
             success: true,
@@ -74,7 +75,6 @@ exports.signin=async(req,res)=>{
         }
 
         let user=await User.findOne({email});
-
         if(!user){
             return res.status(401).json({
                 success: false,
@@ -91,9 +91,10 @@ exports.signin=async(req,res)=>{
                 expiresIn: "2h"
             })
 
-            user.password=undefined;
-            user=user.token;
-
+            user=user.toObject();
+            user.token = token;
+            user.password = undefined;
+            // console.log(user);
             const options={
                     expires: new Date(Date.now() + 3*24*60*60*1000),
                     httpOnly: true,
@@ -128,16 +129,33 @@ exports.signin=async(req,res)=>{
 exports.google=async(req,res)=>{
     try{
 
-        const {userName,email,password}=req.body;
+        const {userName,email,password,profilePicture}=req.body;
 
-        const userExist=await User.findOne({email});
-        const userKaName=await User.findOne({userName});
+        let user=await User.findOne({email}); 
+        console.log(user);
 
-        if(userExist){
-            return res.status(200).json({
-                success: true,
-                message: "User sign in",
+        if(user){
+            const payload={
+                email: user.email,
+                id: user._id,
+            };
+            let token=jwt.sign(payload,process.env.JWT_SECRET,{
+                expiresIn: "2h"
             })
+            user=user.toObject();
+            user.token = token;
+            user.password = undefined;
+            const options={
+                    expires: new Date(Date.now() + 3*24*60*60*1000),
+                    httpOnly: true,
+            }
+            return res.cookie("token",token,options)
+                .status(200).json({
+                    success: true,
+                    token,
+                    user,
+                    message:"User logged in successfully."
+                })         
         }
         let hashedPassword;
         try {
@@ -148,8 +166,9 @@ exports.google=async(req,res)=>{
         } catch (error) {
             console.log("Error in hashing the password ",error)
         }
-        console.log("create ni kr skte")
-        const newUser= await User.create({userName,email,password});
+        // console.log("create ni kr skte")
+        // const profilePicture=``
+        const newUser= await User.create({userName,email,password,profilePicture});
         console.log(newUser);
         return res.status(200).json({
             success: true,
