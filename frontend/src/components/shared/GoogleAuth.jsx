@@ -41,7 +41,7 @@ const GoogleAuth = () => {
         toast({ title: "Sign in successfully." })
         navigate("/")
       }
-      // console.log(data);
+      console.log(data);
     } catch (error) {
       console.log("error in sign up", error)
     }

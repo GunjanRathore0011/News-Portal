@@ -16,7 +16,7 @@ import {
 const Header = () => {
 
   const {currentUser}=useSelector((state)=>state.user);
-  console.log(currentUser);
+  // console.log(currentUser.profilePicture);
 
   return (
     <nav className='shadow-lg '>
@@ -76,4 +76,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default Header 

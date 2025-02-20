@@ -50,11 +50,12 @@ const SignInForm = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values) {
+    
     try {
       // setLoading(true);
       // setErrMessage(null);
       dispatch(signInStart());
-
+      console.log("Api call huii..");
       const res = await fetch("/api/v1/signin", {
         method: "POST",
         headers: {
@@ -62,7 +63,13 @@ const SignInForm = () => {
         },
         body: JSON.stringify(values),
       });
-      const data = await res.json();
+    
+
+      const data = await res.json().catch(e => {
+        console.error("Failed to parse response:", e);
+      });
+      // console.log(data);
+      
 
       if (data.success == false) {
         // setLoading(false);
