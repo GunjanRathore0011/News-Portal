@@ -5,10 +5,11 @@ import { defineConfig } from "vite"
 export default defineConfig({
   server:{
     proxy:{
-      "/api/v1":{
+      "/api/":{
         target: "http://localhost:4001",
         secure: false,
       },
+      
     }
   },
   plugins: [react()],

@@ -106,7 +106,6 @@ exports.signin=async(req,res)=>{
                     user,
                     message:"User logged in successfully."
                 })
-
         }
         else{
             return res.status(403).json({
