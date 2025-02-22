@@ -13,13 +13,16 @@ exports.verifyUser=async(req,res,next)=>{
                 message: "Token missing",
             })
         }
+        console.log(token);
         // verify the token and pass the token in req body
         try{
             const decode=jwt.verify(token,process.env.JWT_SECRET);
             // console.log("It is decode ",decode);
             req.user=decode;
+            console.log(req.user.id);
         }
-       
+
+        
         catch(error){
             return res.status(401).json({
                 success: false,

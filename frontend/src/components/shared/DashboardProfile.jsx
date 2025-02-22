@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { z } from 'zod'
 import { Button } from '../ui/button'
@@ -18,6 +18,20 @@ import {
 import { Input } from "@/components/ui/input"
 import { FaUser } from 'react-icons/fa'
 import { useToast } from '@/hooks/use-toast'
+import { deleteFailure, deleteStart, deleteSuccess, signOutSuccess, updateFailure, updateStart, updateSuccess } from '@/redux/user/userSlice'
+
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 
 
 const formSchema = z.object({
@@ -40,7 +54,7 @@ const DashboardProfile = () => {
     const { currentUser } = useSelector(state => state.user)
 
     const { toast } = useToast();
-
+    const dispatch = useDispatch();
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -52,6 +66,9 @@ const DashboardProfile = () => {
     })
     async function onSubmit(values) {
         try {
+
+            dispatch(updateStart())
+
             const userId = currentUser._id;
             // console.log(userId);
             const res = await fetch(`/api/user/update/${userId}`, {
@@ -63,12 +80,65 @@ const DashboardProfile = () => {
             });
             const data = await res.json();
             // console.log(data);
-            if (data.success == false) {
-                toast("Cannot update user profile.Please try again")
+            if (!res.ok) {
+                toast({ title: data.message })
+                dispatch(updateFailure(data.message))
             }
+
+            if (res.ok) {
+                toast({ title: "User profile updated successfully." })
+                dispatch(updateSuccess(data.user))
+            }
+
+
         }
         catch (error) {
-            console.log("Error in update ",error);
+            console.log("Error in update ", error);
+        }
+    }
+
+    const deleteHandler = async () => {
+
+        dispatch(deleteStart());
+        const userId = currentUser._id;
+        const res = await fetch(`/api/user/delete/${userId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            toast({ title: data.message })
+            dispatch(deleteFailure(data.message))
+        }
+
+        if (res.ok) {
+            toast({ title: "User account deleted successfully" });
+            dispatch(deleteSuccess());
+        }
+    }
+
+    const signOutHandler = async () => {
+        try {
+            const res=await fetch("/api/user/signOut",{
+                method: "DELETE"
+            })
+
+            const data = await res.json();
+
+            if(res.ok){
+                dispatch(signOutSuccess());
+                toast({title: data.message})
+            }
+            else{
+                toast({title: data.message});
+            }
+        }
+        catch(error) {
+            console.log("Error in signout",error);
         }
     }
 
@@ -138,8 +208,26 @@ const DashboardProfile = () => {
                     </Button>
 
                     <div className='text-red-600 flex justify-between ' >
-                        <span className='cursor-pointer'>Delete</span>
-                        <span className='cursor-pointer'>Sign Out</span>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="ghost" className='cursor-pointer' >Delete User</Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete your
+                                        account and remove your data from our servers.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction className="bg-red-600" onClick={deleteHandler}>Continue</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+
+                        <Button variant="ghost" className='cursor-pointer' onClick={signOutHandler} >Sign Out</Button>
                     </div>
 
                 </form>

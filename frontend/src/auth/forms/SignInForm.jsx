@@ -20,6 +20,8 @@ import { signInFailure, signInStart, signInSuccess } from '@/redux/user/userSlic
 import { useDispatch, useSelector } from 'react-redux'
 import GoogleAuth from '@/components/shared/GoogleAuth'
 
+
+
 const formSchema = z.object({
   email: z
     .string()
@@ -152,7 +154,7 @@ const SignInForm = () => {
 
 
 
-              <Button type="submit" className='bg-blue-500 w-full'  >
+              <Button type="submit" className='bg-blue-500 w-full '  >
                 {
                   loading ? (<span className='animate-pulse'>Loading...</span>)
                     :

@@ -3,7 +3,7 @@ const User=require("../models/userModel")
 
 exports.updateUser=async(req,res)=>{
     try{
- 
+        // console.log(req.user);
         if(req.user.id!=req.params.userId){
             return res.status(403).json({
                 success: false,
@@ -35,12 +35,13 @@ exports.updateUser=async(req,res)=>{
             }
         }
 
-        if(!req.body.userName.match(/^[a-zA-Z0-9]+$/)){
+        if (!req.body.userName.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/)) {
             return res.status(400).json({
                 success: "false",
-                message: "Username can only contain letters and numbers."
-            })
+                message: "Username can only contain letters, numbers, and spaces (no leading/trailing spaces)."
+            });
         }
+        
     const newProfilePicture=`https://api.dicebear.com/5.x/initials/svg?seed=${req.body.userName} ${""}`
 
         const updatedUser= await User.findByIdAndUpdate(req.params.userId,{
@@ -56,7 +57,8 @@ exports.updateUser=async(req,res)=>{
     updatedUser.password=undefined;
     return res.status(200).json({
         success:true,
-        message:"User data updated successfully."
+        message:"User data updated successfully.",
+        user:updatedUser
     })
     }
     catch(error){

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { FaSearch } from "react-icons/fa";
 import { Button } from '../ui/button';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   DropdownMenu,
@@ -12,11 +12,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { signOutSuccess } from '@/redux/user/userSlice';
+import { useToast } from '@/hooks/use-toast';
 
 const Header = () => {
-
   const {currentUser}=useSelector((state)=>state.user);
+
   // console.log(currentUser.profilePicture);
+  const dispatch=useDispatch();
+  const {toast}=useToast();
+
+  const signOutHandler = async () => {
+    try {
+      const res = await fetch("/api/user/signOut", {
+        method: "DELETE"
+      })
+
+      const data = await res.json();
+
+      if (res.ok) {
+        dispatch(signOutSuccess());
+        toast({ title: data.message })
+      }
+      else {
+        toast({ title: data.message });
+      }
+    }
+    catch (error) {
+      console.log("Error in signout", error);
+    }
+  }
 
   return (
     <nav className='shadow-lg '>
@@ -59,7 +84,7 @@ const Header = () => {
             <DropdownMenuItem className='font-semibold mt-2' >
               <Link to="/dashboard?tab=profile" >Profile</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className='font-semibold mt-2'>
+            <DropdownMenuItem className='font-semibold mt-2' onClick={signOutHandler} >
               Sign Out
             </DropdownMenuItem>
   
