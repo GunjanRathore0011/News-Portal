@@ -65,7 +65,7 @@ const Header = () => {
         </div>
         {currentUser ? (
           <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className='cursor-pointer'>
             <div>
               <img src={currentUser.profilePicture} alt='user photo'
                 className='w-10 h-10 rounded-full'
@@ -84,7 +84,7 @@ const Header = () => {
             <DropdownMenuItem className='font-semibold mt-2' >
               <Link to="/dashboard?tab=profile" >Profile</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className='font-semibold mt-2' onClick={signOutHandler} >
+            <DropdownMenuItem className='font-semibold mt-2 cursor-pointer' onClick={signOutHandler} >
               Sign Out
             </DropdownMenuItem>
   

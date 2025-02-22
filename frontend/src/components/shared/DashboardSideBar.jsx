@@ -2,12 +2,15 @@ import React from 'react'
 import { FaSignOutAlt, FaUserAlt } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useToast } from '@/hooks/use-toast'
 import { signOutSuccess } from '@/redux/user/userSlice'
 
+import { IoIosCreate } from "react-icons/io";
+
 const DashboardSideBar = () => {
-  
+  const {currentUser}=useSelector((state)=>state.user)
+
   const dispatch=useDispatch();
   const {toast}=useToast();
 
@@ -43,13 +46,23 @@ const DashboardSideBar = () => {
 
       {/* Navigation Links */}
       <nav className='flex-1 p-4'>
-        <ul>
+        <ul className='space-y-2'>
           <li>
-            <Link to={"/dashboard?tab=profile"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
+            <Link to={"/dashboard?tab=profile"} className="flex items-center p-2 hover:bg-slate-300 cursor-pointer rounded" >
               <FaUserAlt className='mr-3'></FaUserAlt>
               <span>Profile</span>
             </Link>
           </li>
+
+          {(currentUser ) && (
+            <li>
+              <Link to={"/create-post"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
+                <IoIosCreate className='mr-3'></IoIosCreate>
+                <span>Create Post</span>
+              </Link>
+            </li>
+          )}
+
         </ul>
 
         <div className='p-4 border-t border-gray-700 ' >
