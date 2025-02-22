@@ -86,6 +86,7 @@ exports.signin=async(req,res)=>{
             const payload={
                 email: user.email,
                 id: user._id,
+                isAdmin: user.isAdmin
             };
             let token=jwt.sign(payload,process.env.JWT_SECRET,{
                 expiresIn: "2h"
@@ -137,7 +138,9 @@ exports.google=async(req,res)=>{
             const payload={
                 email: user.email,
                 id: user._id,
+                isAdmin: user.isAdmin
             };
+
             let token=jwt.sign(payload,process.env.JWT_SECRET,{
                 expiresIn: "2h"
             })

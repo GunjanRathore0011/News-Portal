@@ -148,7 +148,7 @@ const DashboardProfile = () => {
             <div className='flex flex-col items-center space-y-3 m-5'>
                 <h1 className='text-2xl font-bold text-slate-800'>Update Your Profile</h1>
                 <div className='h-36 w-36 border-8 border-gray-300  rounded-full flex items-center justify-center '>
-                    <FaUser size={100} className='text-slate-800'></FaUser>
+                    <FaUser size={94} className='text-slate-600'></FaUser>
                 </div>
             </div>
 
