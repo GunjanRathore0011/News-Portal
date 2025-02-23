@@ -20,6 +20,11 @@ app.use("/api/v1",authRoute);
 const userRoute=require("./routes/userRoute")
 app.use("/api/user",userRoute);
 
+
+const postRoute=require("./routes/postRoute")
+app.use("/api/post",postRoute)
+
+
 app.listen(PORT,()=>{
     console.log(`Server started successfully at port ${PORT}.`);
 })
