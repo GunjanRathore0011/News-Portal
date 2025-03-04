@@ -37,7 +37,7 @@ import {
 const formSchema = z.object({
     userName: z
         .string()
-        .min(2, { message: "Username must be atleast 2 characters" }).max(50),
+        .min(3, { message: "Username must be atleast 3 characters" }).max(20),
     email: z
         .string()
         .email({ message: "Invalid email address" }).max(50),
@@ -51,7 +51,7 @@ const formSchema = z.object({
 
 
 const DashboardProfile = () => {
-    const { currentUser } = useSelector(state => state.user)
+    const { currentUser,error,loading } = useSelector(state => state.user)
 
     const { toast } = useToast();
     const dispatch = useDispatch();
@@ -203,8 +203,8 @@ const DashboardProfile = () => {
                         )}
                     />
 
-                    <Button className='w-full bg-green-500' >
-                        Update
+                    <Button className='w-full bg-green-500' disabled={loading} type="submit">
+                        {loading ? "Updating..." : "Update Profile"}
                     </Button>
 
                     <div className='text-red-600 flex justify-between ' >

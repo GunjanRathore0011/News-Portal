@@ -27,7 +27,7 @@ exports.updateUser=async(req,res)=>{
         
 
         if(req.body.userName){
-            if(req.body.userName.length <5 || req.body.userName.length >20){
+            if(req.body.userName.length <3 || req.body.userName.length >20){
                 return res.status(400).json({
                     success: false,
                     message: "Username must be between 5 and 20 characters."

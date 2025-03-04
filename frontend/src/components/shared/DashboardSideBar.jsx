@@ -54,7 +54,7 @@ const DashboardSideBar = () => {
             </Link>
           </li>
 
-          {(currentUser ) && (
+          {(currentUser.isAdmin ) && (
             <li>
               <Link to={"/create-post"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
                 <IoIosCreate className='mr-3'></IoIosCreate>
