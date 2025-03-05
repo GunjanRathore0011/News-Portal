@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useToast } from '@/hooks/use-toast'
 import { signOutSuccess } from '@/redux/user/userSlice'
 
-import { IoIosCreate } from "react-icons/io";
+import { IoIosCreate, IoIosDocument } from "react-icons/io";
 
 const DashboardSideBar = () => {
-  const {currentUser}=useSelector((state)=>state.user)
+  const { currentUser } = useSelector((state) => state.user)
 
-  const dispatch=useDispatch();
-  const {toast}=useToast();
+  const dispatch = useDispatch();
+  const { toast } = useToast();
 
   const signOutHandler = async () => {
     try {
@@ -37,7 +37,7 @@ const DashboardSideBar = () => {
 
 
   return (
-    
+
     <aside className='h-screen w-64 bg-slate-200 text-slate-800 flex flex-col'>
       {/* logo header */}
       <div className='p-4 flex items-center justify-center bg-slate-200'>
@@ -54,11 +54,20 @@ const DashboardSideBar = () => {
             </Link>
           </li>
 
-          {(currentUser.isAdmin ) && (
+          {(currentUser )&& (currentUser.isAdmin) && (
             <li>
               <Link to={"/create-post"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
                 <IoIosCreate className='mr-3'></IoIosCreate>
                 <span>Create Post</span>
+              </Link>
+            </li>
+          )}
+
+          {(currentUser )&&(currentUser.isAdmin) && (
+            <li>
+              <Link to={"/dashboard?tab=posts"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
+                <IoIosDocument className='mr-3'></IoIosDocument>
+                <span>Your Articles</span>
               </Link>
             </li>
           )}
