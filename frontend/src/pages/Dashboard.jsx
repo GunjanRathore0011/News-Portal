@@ -36,7 +36,7 @@ const Dashboard = () => {
        {tab==="profile" && <DashboardProfile/> }
 
         {/* news articles  */}
-       {tab==="posts" && <DashboardPosts/> }
+       {tab==="posts" && <DashboardPosts /> }
       </div>
     </div>
   )
