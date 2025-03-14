@@ -14,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Link } from 'react-router-dom'
+import { setErrorMap } from 'zod'
 
 
 const DashboardPosts = () => {
@@ -21,7 +22,8 @@ const DashboardPosts = () => {
   const { currentUser } = useSelector((state) => state.user)
 
   const [userPosts, setUserPosts] = useState([])
-  console.log(userPosts)
+  // console.log(userPosts)
+  const [showMore,setShowMore]=useState(true)
 
   useEffect(() => {
     if (currentUser.isAdmin) fetchPosts();
@@ -40,16 +42,43 @@ const DashboardPosts = () => {
       // console.log(res)
       if (res.ok) {
         setUserPosts(data.posts)
+
+        if(data.posts.length <6) {
+          setShowMore(false)
+        }
       }
     }
     catch (error) {
       console.log(error);
     }
-
-
   }
+
+  const handleShowMore=async()=>{
+    const startIndex=userPosts.length
+
+    try{
+      const res=await fetch(`api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`)
+
+      // console.log(startIndex)
+      const data=await res.json()
+      // console.log(data)
+      if(res.ok){
+        setUserPosts((prevPosts) => [...prevPosts, ...data.posts])
+
+        if(data.posts.length < 6){
+          setShowMore(false)
+        }
+        
+      }
+    }
+
+    catch(error){
+      console.log(error.message)
+    }
+  }
+
   return (
-    <div>
+    <div > 
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <>
           <Table>
@@ -83,20 +112,19 @@ const DashboardPosts = () => {
                   </TableCell>
                   <TableCell className="font-medium">
                     <Link to={`/update-post/${post._id}`}>
-                      <Button variant='ghost' className='text-green-500'>Edit</Button>
+                      <Button variant='ghost' className='text-green-500 py-0'>Edit</Button>
                     </Link>
                   </TableCell>
                 </TableRow>
               </TableBody>
             ))}
 
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={3}>Total</TableCell>
-                <TableCell className="text-right">$2,500.00</TableCell>
-              </TableRow>
-            </TableFooter>
           </Table>
+          {
+            showMore && (
+              <Button onClick={handleShowMore} className='text-blue-600 block mx-auto' variant='ghost'>Show More</Button>
+            )
+          }
         </>
       ) :
         (<p>You have no posts yet!</p>)}
