@@ -14,7 +14,18 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Link } from 'react-router-dom'
-import { setErrorMap } from 'zod'
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 
 const DashboardPosts = () => {
@@ -23,7 +34,8 @@ const DashboardPosts = () => {
 
   const [userPosts, setUserPosts] = useState([])
   // console.log(userPosts)
-  const [showMore,setShowMore]=useState(true)
+  const [showMore, setShowMore] = useState(true)
+
 
   useEffect(() => {
     if (currentUser.isAdmin) fetchPosts();
@@ -43,7 +55,7 @@ const DashboardPosts = () => {
       if (res.ok) {
         setUserPosts(data.posts)
 
-        if(data.posts.length <6) {
+        if (data.posts.length < 6) {
           setShowMore(false)
         }
       }
@@ -53,32 +65,61 @@ const DashboardPosts = () => {
     }
   }
 
-  const handleShowMore=async()=>{
-    const startIndex=userPosts.length
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length
 
-    try{
-      const res=await fetch(`api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`)
+    try {
+      const res = await fetch(`api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`)
 
       // console.log(startIndex)
-      const data=await res.json()
+      const data = await res.json()
       // console.log(data)
-      if(res.ok){
+      if (res.ok) {
         setUserPosts((prevPosts) => [...prevPosts, ...data.posts])
 
-        if(data.posts.length < 6){
+        if (data.posts.length < 6) {
           setShowMore(false)
         }
-        
+
       }
     }
 
-    catch(error){
+    catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const deleteHandler = async (postId) => {
+    // console.log("Deleting post:", postId);
+
+  // const token = localStorage.getItem("user"); // Retrieve token from local storage
+
+    // console.log(token)
+    try {
+      const res = await fetch(`api/post/deletePost/${postId}`, { 
+        method: "DELETE", 
+        headers: { "Content-Type": "application/json" }
+      });
+  
+      const data = await res.json()
+      // console.log(data)
+
+      if (res.ok) {
+        // console.log(data)
+        setUserPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
+      }
+      else{
+        console.log("delete noi hua")
+      }
+    }
+
+    catch (error) {
       console.log(error.message)
     }
   }
 
   return (
-    <div > 
+    <div >
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <>
           <Table>
@@ -108,12 +149,32 @@ const DashboardPosts = () => {
                   <TableCell className="font-medium">{post.title}</TableCell>
                   <TableCell className="font-medium">{post.category}</TableCell>
                   <TableCell className="font-medium">
-                    <Button variant='ghost' className='text-red-500'>Delete</Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button className=" text-red-500 hover:underline" >
+                          Delete
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete your
+                            post from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => { deleteHandler(post._id) }} className="bg-red-600">Continue</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </TableCell>
                   <TableCell className="font-medium">
                     <Link to={`/update-post/${post._id}`}>
-                      <Button variant='ghost' className='text-green-500 py-0'>Edit</Button>
-                    </Link>
+                      <button className=" text-green-500 hover:underline">
+                        Edit
+                      </button></Link>
                   </TableCell>
                 </TableRow>
               </TableBody>

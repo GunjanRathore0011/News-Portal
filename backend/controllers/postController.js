@@ -51,7 +51,7 @@ exports.create = async (req, res) => {
 }
 
 
-exports.getPosts = async (req, res, next) => {
+exports.getPosts = async (req, res) => {
     try {
       const startIndex = parseInt(req.query.startIndex) || 0
       const limit = parseInt(req.query.limit) || 6
@@ -106,3 +106,35 @@ exports.getPosts = async (req, res, next) => {
     }
   }
   
+
+exports.deletePost=async(req,res)=>{
+  try{
+    if(!req.user.isAdmin){
+      res.status(401).json({
+        success: true,
+        message: "You are not authenticated to delete a post."
+      })
+    }
+    const postId=req.params.postId;
+  
+    const deletePost= await Post.findByIdAndDelete( {_id: postId})
+    // console.log(deletePost)
+    if(!deletePost){
+      return res.status(401).json({
+        success: false,
+        message: "Post doesn't exist."
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Post deleted successfully."
+    })
+  }
+  catch(error){
+    console.log(error.message)
+    return res.status(500).json({
+      success: false,
+      message: "Unable to delete post.Try again later."
+  });
+  }
+}
