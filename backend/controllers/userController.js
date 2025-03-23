@@ -132,7 +132,7 @@ exports.google=async(req,res)=>{
         const {userName,email,password,profilePicture}=req.body;
 
         let user=await User.findOne({email}); 
-        console.log(user);
+        // console.log(user);
 
         if(user){
             const payload={
@@ -163,7 +163,7 @@ exports.google=async(req,res)=>{
         try {
  
             hashedPassword=await bcrypt.hash(password,10)
-            console.log(hashedPassword);
+            // console.log(hashedPassword);
 
         } catch (error) {
             console.log("Error in hashing the password ",error)
@@ -171,7 +171,7 @@ exports.google=async(req,res)=>{
         // console.log("create ni kr skte")
         // const profilePicture=``
         const newUser= await User.create({userName,email,password,profilePicture});
-        console.log(newUser);
+        // console.log(newUser);
         return res.status(200).json({
             success: true,
             message: "User sign up",
@@ -183,6 +183,60 @@ exports.google=async(req,res)=>{
         res.status(500).json({
             success: false,
             message: "Cannot authenticate using google.",
+        })
+    }
+}
+
+
+exports.getUsers=async(req,res)=>{
+    try{
+        if(!req.user.isAdmin){
+            return res.status(400).json({
+                success: false,
+                message: "You are not authenticated to view all users."
+            })
+
+        }
+        const allUser= await User.find({});
+        return res.status(200).json({
+            success: true,
+            message: "Displayed all users.",
+            Users: allUser
+        })
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error. cannot fetch all users."
+        })
+    }
+}
+
+exports.deleteUserByAdmin=async(req,res)=>{
+    try{
+        const userid=req.params.userId;
+        if(userid==req.user.id){
+        const deletedUser=await User.findByIdAndDelete({_id:userid})
+        res.clearCookie("token");
+            return res.status(200).json({
+                success: true,
+                message: "Your account is deleted successsfully."
+            })
+            
+        }
+        const deletedUser=await User.findByIdAndDelete({_id:userid})
+        // console.log(deletedUser);
+        return res.status(200).json({
+            success: true,
+            message: "User account deleted successfully."
+        })
+    }
+    catch(error){
+        console.log("Yeh rahi error ",error);
+        return res.status(500).json({
+            success: false,
+            message: "Cannot delete account.Please try again."
         })
     }
 }

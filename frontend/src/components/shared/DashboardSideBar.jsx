@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast'
 import { signOutSuccess } from '@/redux/user/userSlice'
 
 import { IoIosCreate, IoIosDocument } from "react-icons/io";
+import { FaUsers } from "react-icons/fa6";
 
 const DashboardSideBar = () => {
   const { currentUser } = useSelector((state) => state.user)
@@ -54,7 +55,7 @@ const DashboardSideBar = () => {
             </Link>
           </li>
 
-          {(currentUser )&& (currentUser.isAdmin) && (
+          {(currentUser) && (currentUser.isAdmin) && (
             <li>
               <Link to={"/create-post"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
                 <IoIosCreate className='mr-3'></IoIosCreate>
@@ -63,11 +64,20 @@ const DashboardSideBar = () => {
             </li>
           )}
 
-          {(currentUser )&&(currentUser.isAdmin) && (
+          {(currentUser) && (currentUser.isAdmin) && (
             <li>
               <Link to={"/dashboard?tab=posts"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
                 <IoIosDocument className='mr-3'></IoIosDocument>
                 <span>Your Articles</span>
+              </Link>
+            </li>
+          )}
+
+          {(currentUser) && (currentUser.isAdmin) && (
+            <li>
+              <Link to={"/dashboard?tab=users"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
+                <FaUsers className='mr-3'></FaUsers>
+                <span>All Users</span>
               </Link>
             </li>
           )}
