@@ -24,6 +24,9 @@ app.use("/api/user",userRoute);
 const postRoute=require("./routes/postRoute")
 app.use("/api/post",postRoute)
 
+const newsRoute=require("./routes/newsRoute")
+app.use("/api/news",newsRoute)
+
 
 app.listen(PORT,()=>{
     console.log(`Server started successfully at port ${PORT}.`);

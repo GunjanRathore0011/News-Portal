@@ -12,6 +12,7 @@ import Footer from "./components/shared/Footer"
 import PrivateRoute from "./components/shared/PrivateRoute"
 import CreatePost from "./components/shared/CreatePost"
 import AdminPrivateRoute from "./components/shared/AdminPrivateRoute"
+import PostDetails from "./pages/PostDetails"
 
 function App() {
 
@@ -26,15 +27,19 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route element={<PrivateRoute></PrivateRoute>} >
         <Route path="/dashboard" element={<Dashboard />} />
-    
+     
         </Route>
        
         <Route path="/news" element={<NewsArticle />} />
-      
+        <Route path="/post/:postSlug" element={<PostDetails></PostDetails>} ></Route>
+
+
         <Route element={<AdminPrivateRoute></AdminPrivateRoute>} >
         <Route path="/create-post" element={<CreatePost/>}/>
         </Route>
       
+
+
       </Routes>
 
       

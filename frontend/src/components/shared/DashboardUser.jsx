@@ -71,7 +71,7 @@ const DashboardUser = () => {
 
 
     const deleteHandler = async (userId) => {
-      alert("clicked")
+      // alert("clicked")
         dispatch(deleteStart());
         const res = await fetch(`/api/user/deleteUser/${userId}`, {
             method: "DELETE",
@@ -86,7 +86,7 @@ const DashboardUser = () => {
         if (userId === currentUser._id) {   
           toast({ title: data.message })
           localStorage.removeItem("persist:root");
-          currentUser=null
+          // currentUser=null
           navigate("/sign-up"); 
         } 
         else if (res.ok) {

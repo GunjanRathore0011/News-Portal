@@ -132,7 +132,7 @@ const DashboardPosts = () => {
                 <TableHead>Category</TableHead>
                 <TableHead>Delete</TableHead>
                 <TableHead>Edit</TableHead>
-              </TableRow>
+              </TableRow> 
             </TableHeader>
 
             {userPosts.map((post) => (
