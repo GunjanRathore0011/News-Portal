@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Separator } from "@/components/ui/separator"
 
 import { Link, useParams } from 'react-router-dom'
+import Advertise from '@/components/shared/Advertise'
+import CommentSection from '@/components/shared/CommentSection'
 
 const PostDetails = () => {
   const { postSlug } = useParams()
@@ -91,6 +93,13 @@ const PostDetails = () => {
         {/* dangerouslySetInnerHTML={{ __html: post && post.content }} */}
         {post && post.content}
       </div>
+
+      <div className='max-w-4xl mx-auto w-full'>
+        <Advertise></Advertise>
+      </div>
+
+      <CommentSection postId={post && post._id} />
+
       </main>
   )
 }
