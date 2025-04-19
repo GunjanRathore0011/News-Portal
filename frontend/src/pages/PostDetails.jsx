@@ -6,6 +6,7 @@ import { Link, useParams } from 'react-router-dom'
 import Advertise from '@/components/shared/Advertise'
 import CommentSection from '@/components/shared/CommentSection'
 import Comment from '@/components/shared/Comment'
+import PostCard from '@/components/shared/PostCard'
 
 const PostDetails = () => {
   const { postSlug } = useParams()
@@ -13,8 +14,9 @@ const PostDetails = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [post, setPost] = useState(null)
+  const [recentArticles, setRecentArticles] = useState(null)
 
-  // console.log(recentArticles)
+  console.log(recentArticles)
 
   // console.log(post)
 
@@ -47,6 +49,25 @@ const PostDetails = () => {
 
     fetchPost()
   }, [postSlug])
+
+  useEffect(() => {
+    try {
+      const fetchRecentPosts = async () => {
+        const res = await fetch(`/api/post/getposts?limit=3`)
+
+        const data = await res.json()
+
+        if (res.ok) {
+          setRecentArticles(data.posts)
+        }
+      }
+
+      fetchRecentPosts()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }, [])
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -100,7 +121,18 @@ const PostDetails = () => {
 
       <CommentSection postId={post && post._id} />
 
+      <div className="flex flex-col justify-center items-center mb-5">
+        <h1 className="text-xl font-semibold mt-5 text-slate-700">
+          Recently published articles
+        </h1>
 
+        <div className="flex flex-wrap gap-5 my-5 justify-center">
+          {recentArticles &&
+            recentArticles.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))}
+        </div>
+      </div>
 
     </main>
   )

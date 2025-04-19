@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from '../ui/button'
 import { toast } from '@/hooks/use-toast'
 import Comment from './Comment'
+import { get } from 'react-hook-form'
 
 
 const CommentSection = (postId) => {
@@ -57,24 +58,25 @@ const CommentSection = (postId) => {
         }
     }
 
-    useEffect(() => {
-        const getComments = async () => {
-            try {
-                const res = await fetch(`/api/comment/getPostComments/${postId.postId}`)
+   // ✅ Define getComments outside useEffect so it can be reused
+   const getComments = async () => {
+    try {
+      const res = await fetch(`/api/comment/getPostComments/${postId.postId}`)
 
-                if (res.ok) {
-                    const data = await res.json()
-                    setAllComment(data.comments)
-                    // console.log(data.comments)
-                }
-            } catch (error) {
-                console.log(error.message)
-            }
-        }
+      if (res.ok) {
+        const data = await res.json()
+        setAllComment(data.comments)
+        // console.log(data.comments)
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
-        getComments()
-    }, [postId])
-
+  // ✅ Call getComments when postId changes
+  useEffect(() => {
+    getComments()
+  }, [postId])
     return (
         <div className='max-w-3xl mx-auto w-full p-3'>
             {
@@ -144,7 +146,7 @@ const CommentSection = (postId) => {
             <Comment
               key={comment._id}
               comment={comment}
-         
+              onDelete={getComments}  
             />
           ))}
         </>

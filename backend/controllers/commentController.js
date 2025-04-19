@@ -64,11 +64,15 @@ exports.likeComment = async (req, res) => {
             // user already liked the comment, so we need to unlike it
             comment.likes = comment.likes.filter((id) => id !== userId);
             comment.numberOfLikes -= 1;
+        return res.status(200).json({message: "Comment unliked successfully", comment});
+
         }
         else{
             // user has not liked the comment yet, so we need to like it
             comment.likes.push(userId);
             comment.numberOfLikes += 1;
+        return res.status(200).json({message: "Comment liked successfully", comment});
+
         }
         await comment.save();
         return res.status(200).json({message: "Comment liked/unliked successfully", comment});
