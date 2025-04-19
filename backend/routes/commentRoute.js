@@ -5,7 +5,7 @@ const { createComment ,getPostComments,likeComment,editComment,deleteComment} = 
 const { verifyUser } = require('../utils/verifyUser');
 
 router.post('/create',verifyUser, createComment); 
-router.get('/getPostComments', getPostComments);
+router.get('/getPostComments/:postId', getPostComments);
 router.put('/likeComment', verifyUser, likeComment); 
 router.put('/editComment', verifyUser, editComment);
 router.delete('/deleteComment', verifyUser, deleteComment);

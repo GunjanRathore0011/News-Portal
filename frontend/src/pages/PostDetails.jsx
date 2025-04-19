@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator"
 import { Link, useParams } from 'react-router-dom'
 import Advertise from '@/components/shared/Advertise'
 import CommentSection from '@/components/shared/CommentSection'
+import Comment from '@/components/shared/Comment'
 
 const PostDetails = () => {
   const { postSlug } = useParams()
@@ -12,7 +13,6 @@ const PostDetails = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [post, setPost] = useState(null)
-  const [recentArticles, setRecentArticles] = useState(null)
 
   // console.log(recentArticles)
 
@@ -58,20 +58,20 @@ const PostDetails = () => {
       </div>
     )
   }
-  return(
+  return (
     <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
       <h1 className="text-3xl mt-10 p-3 text-center font-bold max-w-3xl mx-auto lg:text-4xl text-slate-700 underline">
         {post && post.title}
       </h1>
 
-      <Link to={`/search?category=${post && post.category}`} 
+      <Link to={`/search?category=${post && post.category}`}
         className='self-center mt-5'>
-  
+
         <Button variant='outline' className='border border-slate-500'>{post && post.category}</Button>
       </Link>
 
-      <img 
-        src={post && post.image} 
+      <img
+        src={post && post.image}
         alt={post && post.title}
         className='mt-10 p-3 max-h-[500px] w-full object-cover'
       ></img>
@@ -83,12 +83,12 @@ const PostDetails = () => {
         </span>
 
         <span className='italic'>
-          {post && (post.content.length / 100 ).toFixed(0)} mins read
+          {post && (post.content.length / 100).toFixed(0)} mins read
         </span>
 
       </div>
 
-      <Separator className='bg-slate-500'/>
+      <Separator className='bg-slate-500' />
       <div className='p-3  max-w-3xl w-full mx-auto'>
         {/* dangerouslySetInnerHTML={{ __html: post && post.content }} */}
         {post && post.content}
@@ -100,7 +100,9 @@ const PostDetails = () => {
 
       <CommentSection postId={post && post._id} />
 
-      </main>
+
+
+    </main>
   )
 }
 

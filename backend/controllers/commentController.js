@@ -9,7 +9,11 @@ try{
     if(userId!=req.user.id){
         return res.status(403).json({message: "You are not allowed to create a comment"});
     }
-
+    // if a user has already commented on the post, then he cannot comment again
+    const existingComment = await Comment.findOne({userId, postId});
+    if(existingComment){   
+        return res.status(400).json({message: "You have already commented on this post"});
+    }
     if(!content){
         return res.status(400).json({message: "Comment content is required"});
     }
@@ -29,12 +33,12 @@ try{
 
 exports.getPostComments = async (req, res) => {
     try{
-        const {postId} = req.body  ;
+        const postId = req.params.postId || req.query.postId;
         if(!postId){
             return res.status(400).json({message: "Post ID is required"});
         }
         const comments = await Comment.find({postId}).sort({createdAt: -1});
-        if(comments.length === 0){
+        if(!comments || comments.length === 0){
             return res.status(404).json({message: "No comments found for this post"});
         }
         return res.status(200).json({message: "Comments fetched successfully", comments});
