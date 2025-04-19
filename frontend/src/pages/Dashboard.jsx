@@ -4,6 +4,7 @@ import DashboardPosts from '@/components/shared/DashboardPosts';
 import DashboardProfile from '@/components/shared/DashboardProfile';
 import DashboardSideBar from '@/components/shared/DashboardSideBar'
 import DashboardUser from "@/components/shared/DashboardUser"
+import MainDashboard from '@/components/shared/MainDashboard';
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
   
@@ -41,12 +42,14 @@ const Dashboard = () => {
        {tab==="posts" && <DashboardPosts /> }
 
        {/* get all users */}
-       {tab=="users" && <DashboardUser></DashboardUser>}
+       {tab==="users" && <DashboardUser></DashboardUser>}
 
        {/* get all comments */}
-       {tab=="comments" && <DashboardComments></DashboardComments>}
+       {tab==="comments" && <DashboardComments></DashboardComments>}
        
-       
+       {/*main dasboard */}
+        {tab==="dashboard" && <MainDashboard></MainDashboard>}
+
       </div>
     </div>
   )

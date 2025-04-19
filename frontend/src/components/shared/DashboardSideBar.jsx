@@ -1,10 +1,11 @@
 import React from 'react'
-import { FaSignOutAlt, FaUserAlt } from 'react-icons/fa'
+import { FaComment, FaSignOutAlt, FaUserAlt } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
 import { useDispatch, useSelector } from 'react-redux'
 import { useToast } from '@/hooks/use-toast'
 import { signOutSuccess } from '@/redux/user/userSlice'
+import { MdDashboardCustomize } from "react-icons/md";
 
 import { IoIosCreate, IoIosDocument } from "react-icons/io";
 import { FaUsers } from "react-icons/fa6";
@@ -48,12 +49,25 @@ const DashboardSideBar = () => {
       {/* Navigation Links */}
       <nav className='flex-1 p-4'>
         <ul className='space-y-2'>
+
+
+        {(currentUser) && (currentUser.isAdmin) && (
+            <li>
+              <Link to={"/dashboard?tab=dashboard"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
+              <MdDashboardCustomize className='mr-3'/>
+                <span>Dashboard</span>
+              </Link>
+            </li>
+          )}
+
           <li>
             <Link to={"/dashboard?tab=profile"} className="flex items-center p-2 hover:bg-slate-300 cursor-pointer rounded" >
               <FaUserAlt className='mr-3'></FaUserAlt>
               <span>Profile</span>
             </Link>
           </li>
+
+          
 
           {(currentUser) && (currentUser.isAdmin) && (
             <li>
@@ -85,7 +99,7 @@ const DashboardSideBar = () => {
           {(currentUser) && (currentUser.isAdmin) && (
             <li>
               <Link to={"/dashboard?tab=comments"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
-                <FaUsers className='mr-3'></FaUsers>
+              <FaComment  className='mr-3'></FaComment >
                 <span>All Comments</span>
               </Link>
             </li>
