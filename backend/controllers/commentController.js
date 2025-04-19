@@ -116,7 +116,7 @@ exports.deleteComment = async (req, res) => {
         const{commentId, userId} = req.body;
 
         const comment = await Comment.findById(commentId);
-        if(comment.userId !== userId){
+        if(comment.userId !== userId && !req.user.isAdmin){
             return res.status(403).json({
                 success: false, 
                 message: "You are not allowed to delete this comment"});
@@ -133,3 +133,45 @@ exports.deleteComment = async (req, res) => {
         return res.status(500).json({message: "Internal server error"});
     }
 }
+
+
+// get all comments 
+
+exports.getComments = async (req, res, next) => {
+    if (!req.user.isAdmin) {
+      return next(
+        errorHandler(403, "You are not authorized to access this resource!")
+      )
+    }
+  
+    try {
+      const startIndex = parseInt(req.query.startIndex) || 0
+  
+      const limit = parseInt(req.query.limit) || 9
+  
+      const sortDirection = req.query.sort === "desc" ? -1 : 1
+  
+      const comments = await Comment.find()
+        .sort({ createdAt: sortDirection })
+        .skip(startIndex)
+        .limit(limit)
+  
+      const totalComments = await Comment.countDocuments()
+  
+      const now = new Date()
+  
+      const oneMonthAgo = new Date(
+        now.getFullYear(),
+        now.getMonth() - 1,
+        now.getDate()
+      )
+  
+      const lastMonthComments = await Comment.countDocuments({
+        createdAt: { $gte: oneMonthAgo },
+      })
+  
+      res.status(200).json({ comments, totalComments, lastMonthComments })
+    } catch (error) {
+      next(error)
+    }
+  }

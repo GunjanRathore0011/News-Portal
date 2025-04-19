@@ -82,6 +82,15 @@ const DashboardSideBar = () => {
             </li>
           )}
 
+          {(currentUser) && (currentUser.isAdmin) && (
+            <li>
+              <Link to={"/dashboard?tab=comments"} className="flex items-center p-2 hover:bg-slate-300 rounded" >
+                <FaUsers className='mr-3'></FaUsers>
+                <span>All Comments</span>
+              </Link>
+            </li>
+          )}
+
         </ul>
 
         <div className='p-4 border-t border-gray-700 ' >
