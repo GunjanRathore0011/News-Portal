@@ -25,7 +25,7 @@ const postRoute=require("./routes/postRoute")
 app.use("/api/post",postRoute)
 
 const newsRoute=require("./routes/newsRoute")
-app.use("/api/news",newsRoute)
+app.use("/api",newsRoute)
 
 const commentRoute=require("./routes/commentRoute")
 app.use("/api/comment",commentRoute)

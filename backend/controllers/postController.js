@@ -1,5 +1,15 @@
 const Post = require("../models/postModel")
- 
+// Require the cloudinary library
+const cloudinary = require('cloudinary').v2;
+
+// Return "https" URLs by setting secure: true
+cloudinary.config({
+  secure: true
+});
+
+// Log the configuration
+console.log(cloudinary.config());
+
 exports.create = async (req, res) => {
     try {
         if (!req.user) {
@@ -24,6 +34,8 @@ exports.create = async (req, res) => {
         }
 
         const slug = req.body.title.split(" ").join("-").toLowerCase().replace(/^a-z0-9/g, "");
+
+        
 
         // console.log(req.user)
 

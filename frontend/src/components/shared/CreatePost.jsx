@@ -1,79 +1,68 @@
 import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent } from "@/components/ui/card"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue
 } from "@/components/ui/select"
 
-
-const CreatePost = () => {
+export default function CreatePost() {
   const [content, setContent] = useState("");
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    console.log(file)
-  }
+  const [image, setImage] = useState(null);
+
+  const handleImageChange = (e) => setImage(e.target.files[0]);
+
   return (
+    <div className="max-w-4xl mx-auto py-10 px-4">
+      <h2 className="text-3xl font-bold text-center mb-6">📝 Create New Post</h2>
 
-    <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold text-slate-700">
-        Create a post
-      </h1>
+      <Card>
+        <CardContent className="p-6 space-y-6">
 
+          {/* Title + Category */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Input type="text" placeholder="Post Title" className="flex-1" required />
+            <Select>
+              <SelectTrigger className="sm:w-1/3">
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="tech">Tech News</SelectItem>
+                  <SelectItem value="startups">Startups</SelectItem>
+                  <SelectItem value="ai">AI & Cybersecurity</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
 
-      <form className="flex flex-col gap-4" >
-        <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <Input
-            type="text"
-            placeholder="Title"
-            required
-            id="title"
-            className="w-full sm:w-3/4 h-12 border border-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+          {/* Image Upload */}
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+            <input type="file" id="imageUpload" onChange={handleImageChange} hidden />
+            <label htmlFor="imageUpload" className="cursor-pointer text-sm text-gray-600">
+              {image ? `📸 ${image.name}` : "Click to upload an image"}
+            </label>
+          </div>
+
+          {/* Content */}
+          <Textarea
+            placeholder="Write your article here..."
+            className="min-h-[200px]"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
           />
 
-          <Select
-           
+          <Button className="bg-yellow-400 hover:bg-yellow-500 text-black w-full"
+            onClick={() => {
+              console.log("Post submitted:", { content, image });
+            } }
           >
-            <SelectTrigger className="w-full sm:w-1/4 h-12 border border-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0">
-              <SelectValue placeholder="Select a Category" />
-            </SelectTrigger>
+            Publish Post
+          </Button>
 
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Category</SelectLabel>
-                <SelectItem value="worldnews">Tech News </SelectItem>
-                <SelectItem value="sportsnews">Startups</SelectItem>
-                <SelectItem value="localnews">AI & Cybersecurity</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Image Upload */}
-      <div className="border-dashed border-2 border-gray-300 p-3 mb-4 rounded-md">
-        <input type="file" onChange={handleImageChange} className="mb-2 " />
-        <button className="bg-gray-800 text-white px-4 py-1 rounded-md">
-          Upload Image
-        </button>
-      </div>
-
-     {/* Rich Text Editor (Simple TextArea) */}
-     <textarea
-        placeholder="Write something here..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        className="w-full p-2 border rounded-md h-32"
-      />
-        
-
-      </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }
-
-export default CreatePost

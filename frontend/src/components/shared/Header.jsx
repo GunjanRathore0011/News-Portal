@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FaSearch } from "react-icons/fa";
 import { Button } from '../ui/button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,11 +16,25 @@ import { signOutSuccess } from '@/redux/user/userSlice';
 import { useToast } from '@/hooks/use-toast';
 
 const Header = () => {
-  const {currentUser}=useSelector((state)=>state.user);
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  // console.log(currentUser.profilePicture);
-  const dispatch=useDispatch();
   const {toast}=useToast();
+  const { currentUser } = useSelector((state) => state.user)
+
+  const [searchTerm, setSearchTerm] = useState("")
+  // console.log(searchTerm)
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search)
+    // console.log("URL params", urlParams)
+    const searchTermFromUrl = urlParams.get("searchTerm")
+    // console.log("Search term from URL", searchTermFromUrl)
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl)
+    }
+  }, [location.search])
 
   const signOutHandler = async () => {
     try {
@@ -43,6 +57,24 @@ const Header = () => {
     }
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (searchTerm) {
+      
+      const urlParams = new URLSearchParams(location.search)
+      urlParams.set("searchTerm", searchTerm)
+
+      const searchQuery = urlParams.toString()
+      navigate(`/search?${searchQuery}`)
+      setSearchTerm("")
+      // console.log(searchQuery)
+
+    }
+    else {
+      toast({ title: "Please enter a search term" })
+    }
+  }
+
   return (
     <nav className='shadow-lg '>
       <div className='flex justify-around items-center p-4 max-w-screen-2xl'>
@@ -53,15 +85,38 @@ const Header = () => {
           </h1>
         </Link>
 
-        <form className='p-3 bg-slate-100 rounded-lg flex items-center'>
-          <input className='bg-transparent focus:outline-none w-24 sm:w-64' type='text' placeholder='Search..'></input>
+        <form className='p-3 bg-slate-100 rounded-lg flex items-center' onSubmit={handleSubmit}>
+          <input className='bg-transparent focus:outline-none w-16 sm:w-64'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          type='text' placeholder='Search..'></input>
           <button className='text-slate-600'><FaSearch /></button>
         </form >
 
-        <div className=' flex justify-between w-56 text-slate-700 flex-wrap'>
+        <div className=' flex justify-between w-72 text-slate-700 flex-wrap'>
           <Link  to={'/'} className='hover:underline'>Home</Link>
           <Link to={'/about'} className='hover:underline'>About</Link>
           <Link to={'/news'} className='hover:underline'>News Articles</Link>
+          <DropdownMenu>
+          <DropdownMenuTrigger asChild className='cursor-pointer'>
+            <div>
+            <h3 to={'/fake-news'} className='hover:underline'>AI Tools</h3>
+
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className='w-20'>
+            
+            {/* <DropdownMenuSeparator className="bg-gray-400" /> */}
+            
+            <DropdownMenuItem className='font-semibold mt-2' >
+            <Link to={'/fake-news'} className='hover:underline'>Fake News Detector</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className='font-semibold mt-2' >
+            <Link to={'/summarize'} className='hover:underline'>Article Summarizer</Link>
+            </DropdownMenuItem>
+  
+            </DropdownMenuContent>
+        </DropdownMenu>
         </div>
         {currentUser ? (
           <DropdownMenu>

@@ -4,7 +4,7 @@ import SignInForm from "./auth/forms/SignInForm"
 import SignUpForm from "./auth/forms/SignUpForm"
 import Home from "./pages/Home"
 import Dashboard from "./pages/Dashboard"
-import NewsArticle from "./pages/NewsArticle"
+import NewsArticle from "./pages/FakeNews"
 import About from "./pages/About"
 import Header from "./components/shared/Header"
 import { Toaster } from "./components/ui/toaster"
@@ -14,6 +14,11 @@ import CreatePost from "./components/shared/CreatePost"
 import AdminPrivateRoute from "./components/shared/AdminPrivateRoute"
 import PostDetails from "./pages/PostDetails"
 import ScrollToTop from "./components/shared/ScrollToTop"
+import Search from "./pages/Search"
+import FakeNews from "./pages/FakeNews"
+import Summarize from "./pages/Summarize"
+
+
 
 function App() {
 
@@ -27,12 +32,16 @@ function App() {
 
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/search" element={<Search></Search>}></Route>
+
         <Route element={<PrivateRoute></PrivateRoute>} >
         <Route path="/dashboard" element={<Dashboard />} />
      
         </Route>
        
-        <Route path="/news" element={<NewsArticle />} />
+        <Route path="/fake-news" element={<FakeNews />} />
+        <Route path="/summarize" element={<Summarize />} />
+
         <Route path="/post/:postSlug" element={<PostDetails></PostDetails>} ></Route>
 
 
