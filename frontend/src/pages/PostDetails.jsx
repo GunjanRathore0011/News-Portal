@@ -16,7 +16,7 @@ const PostDetails = () => {
   const [post, setPost] = useState(null)
   const [recentArticles, setRecentArticles] = useState(null)
 
-  console.log(recentArticles)
+  // console.log(recentArticles)
 
   // console.log(post)
 

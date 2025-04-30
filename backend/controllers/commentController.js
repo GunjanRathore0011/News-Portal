@@ -83,7 +83,7 @@ exports.likeComment = async (req, res) => {
     }
 }
 
-// edit handler
+// edit handler 
 exports.editComment = async (req, res) => {
     try{
         const {commentId, content,userId} = req.body;

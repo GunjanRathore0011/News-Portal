@@ -96,7 +96,7 @@ const Header = () => {
         <div className=' flex justify-between w-72 text-slate-700 flex-wrap'>
           <Link  to={'/'} className='hover:underline'>Home</Link>
           <Link to={'/about'} className='hover:underline'>About</Link>
-          <Link to={'/news'} className='hover:underline'>News Articles</Link>
+          <Link to={'/search'} className='hover:underline'>News Articles</Link>
           <DropdownMenu>
           <DropdownMenuTrigger asChild className='cursor-pointer'>
             <div>

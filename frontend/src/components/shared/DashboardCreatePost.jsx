@@ -1,17 +1,55 @@
-import React, { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent } from "@/components/ui/card"
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-export default function CreatePost() {
+export default function DashboardCreatePost() {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
+  const [title, setTitle] = useState(""); 
+  const [category, setCategory] = useState("");
 
   const handleImageChange = (e) => setImage(e.target.files[0]);
+
+  const handleUploadPost = async () => {
+    if (!title || !category || !content || !image) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("content", content);
+    formData.append("image", image);
+
+    try {
+      const res = await fetch("/api/post/create", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      console.log("Post creation response:", data);
+
+      if (data.success) {
+        alert("Post created successfully!");
+        setTitle("");
+        setCategory("");
+        setContent("");
+        setImage(null);
+      } else {
+        alert("Failed to create post: " + data.message);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("An error occurred while uploading the post.");
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4">
@@ -22,8 +60,15 @@ export default function CreatePost() {
 
           {/* Title + Category */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <Input type="text" placeholder="Post Title" className="flex-1" required />
-            <Select>
+            <Input
+              type="text"
+              placeholder="Post Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="flex-1"
+              required
+            />
+            <Select value={category} onValueChange={setCategory}>
               <SelectTrigger className="sm:w-1/3">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
@@ -54,15 +99,12 @@ export default function CreatePost() {
           />
 
           <Button className="bg-yellow-400 hover:bg-yellow-500 text-black w-full"
-            onClick={() => {
-              console.log("Post submitted:", { content, image });
-            } }
-          >
+            onClick={handleUploadPost}>
             Publish Post
           </Button>
 
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

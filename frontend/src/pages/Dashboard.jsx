@@ -1,5 +1,6 @@
 import BottomNavBar from '@/components/shared/BottomNavBar';
 import DashboardComments from '@/components/shared/DashboardComments';
+import DashboardCreatePost from '@/components/shared/DashboardCreatePost';
 import DashboardPosts from '@/components/shared/DashboardPosts';
 import DashboardProfile from '@/components/shared/DashboardProfile';
 import DashboardSideBar from '@/components/shared/DashboardSideBar'
@@ -40,6 +41,9 @@ const Dashboard = () => {
 
         {/* news articles  */}
        {tab==="posts" && <DashboardPosts /> }
+
+        {/* create post */}
+        {tab==="create-post" && <DashboardCreatePost /> }
 
        {/* get all users */}
        {tab==="users" && <DashboardUser></DashboardUser>}

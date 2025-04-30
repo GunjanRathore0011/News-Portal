@@ -10,7 +10,7 @@ import Header from "./components/shared/Header"
 import { Toaster } from "./components/ui/toaster"
 import Footer from "./components/shared/Footer"
 import PrivateRoute from "./components/shared/PrivateRoute"
-import CreatePost from "./components/shared/CreatePost"
+import CreatePost from "./components/shared/DashboardCreatePost"
 import AdminPrivateRoute from "./components/shared/AdminPrivateRoute"
 import PostDetails from "./pages/PostDetails"
 import ScrollToTop from "./components/shared/ScrollToTop"
@@ -46,7 +46,7 @@ function App() {
 
 
         <Route element={<AdminPrivateRoute></AdminPrivateRoute>} >
-        <Route path="/create-post" element={<CreatePost/>}/>
+        {/* <Route path="/create-post" element={<CreatePost/>}/> */}
         </Route>
       
 

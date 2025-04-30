@@ -1,66 +1,69 @@
-const Post = require("../models/postModel")
-// Require the cloudinary library
-const cloudinary = require('cloudinary').v2;
+const Post = require("../models/postModel");
+const cloudinary = require("cloudinary").v2;
 
-// Return "https" URLs by setting secure: true
 cloudinary.config({
-  secure: true
+  secure: true,
 });
 
-// Log the configuration
-console.log(cloudinary.config());
-
 exports.create = async (req, res) => {
-    try {
-        if (!req.user) {
-            return res.status(401).json({
-                success: false,
-                message: "Unauthorized: No user information found. Please log in.",
-            });
-        }
-        if (!req.user.isAdmin) {
-            return res.status(403).json(
-                {
-                    success: false,
-                    message: "You are not authorized to create a post."
-                }
-            )
-        }
-        if(!req.body.title || !req.body.content){
-            return res.status(400).json({
-                success: false,
-                message: "Title and content are required."
-            })
-        }
-
-        const slug = req.body.title.split(" ").join("-").toLowerCase().replace(/^a-z0-9/g, "");
-
-        
-
-        // console.log(req.user)
-
-        const newPost = new Post({
-            ...req.body,
-            slug:slug,
-            userId:req.user.id,
-        })
-
-        const savedPost = await newPost.save();
-        return res.status(201).json({
-            success: true,
-            message: "Post created successfully.",
-            post:savedPost
-     
-        })
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: No user information found.",
+      });
     }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            message: "Internal server error"
-        });
+
+    if (!req.user.isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to create a post.",
+      });
     }
-}
+
+    const { title, content, category } = req.body;
+    if (!title || !content || !req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Title, content, and image are required.",
+      });
+    }
+
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      use_filename: true,
+      unique_filename: false,
+      overwrite: true,
+    });
+
+    const slug = title
+      .split(" ")
+      .join("-")
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "");
+
+    const newPost = new Post({
+      title,
+      content,
+      category,
+      slug,
+      image: result.secure_url,
+      userId: req.user.id,
+    });
+
+    const savedPost = await newPost.save();
+    return res.status(201).json({
+      success: true,
+      message: "Post created successfully.",
+      post: savedPost,
+    });
+  } catch (error) {
+    console.error("Error creating post:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
 
 
 exports.getPosts = async (req, res) => {

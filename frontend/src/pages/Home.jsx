@@ -28,7 +28,7 @@ const Home = () => {
     <div>
       <div className="flex flex-col gap-6 p-28 max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-blue-800">
-          Welcome to <span className="text-red-600"> Morning Dispatch</span>
+          Welcome to <span className="text-red-600"> Tech Trendz</span>
         </h1>
 
         <p className="text-gray-600 mt-3 text-lg">

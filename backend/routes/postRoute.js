@@ -1,13 +1,13 @@
-const express = require("express")
+const express = require("express");
+const router = express.Router();
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
-const router = express.Router()
+const { verifyUser } = require("../utils/verifyUser");
+const { create, deletePost, getPosts } = require("../controllers/postController");
 
-const {verifyUser}=require("../utils/verifyUser")
-const {create, deletePost} = require("../controllers/postController")
-const {getPosts}= require("../controllers/postController")
+router.post("/create", verifyUser, upload.single("image"), create);
+router.get("/getPosts", getPosts);
+router.delete("/deletePost/:postId", verifyUser, deletePost);
 
-router.post("/create",verifyUser,create)
-router.get("/getPosts",getPosts)
-router.delete("/deletePost/:postId",verifyUser,deletePost)
-
-module.exports=router;
+module.exports = router;

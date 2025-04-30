@@ -30,7 +30,7 @@ const Search = () => {
   const [loading, setLoading] = useState(false)
   const [showMore, setShowMore] = useState(false)
 
-  console.log(posts)
+  // console.log(posts)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search)
@@ -39,7 +39,7 @@ const Search = () => {
     const sortFromUrl = urlParams.get("sort")
     const categoryFromUrl = urlParams.get("category")
 
-    console.log(searchTermFromUrl)
+    // console.log(searchTermFromUrl)
 
     if (searchTermFromUrl || sortFromUrl || categoryFromUrl) {
       setSidebarData({

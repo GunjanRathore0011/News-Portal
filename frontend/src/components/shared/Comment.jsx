@@ -5,9 +5,26 @@ import { AiFillLike } from "react-icons/ai";
 import moment from 'moment'
 import { useSelector } from 'react-redux';
 
-const Comment = ({ comment, onDelete }) => {
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog"
+import { Textarea } from '../ui/textarea';
+import { Button } from '../ui/button';
+
+const Comment = ({ comment, onDelete ,onEdit, onLike}) => {
   const { currentUser } = useSelector((state) => state.user)
   const [user, setUser] = useState({})
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedContent, setEditedContent] = useState(comment.content)
+
 
   useEffect(() => {
     const getUser = async () => {
@@ -28,60 +45,47 @@ const Comment = ({ comment, onDelete }) => {
     getUser()
   }, [comment])
 
-  const handleDelete = async () => {
-    try {
-      const res = await fetch(`/api/comment/deleteComment`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          commentId: comment._id,
-          userId: currentUser._id
-        })
-      })
-      const data = await res.json()
-      if (res.ok) {
-        toast({ title: "Comment deleted successfully", variant: "default" })
-        if (onDelete) onDelete()
+  const handleEdit = () => {
+    setIsEditing(true)
+    setEditedContent(comment.content)
+  }
 
-      } else {
-        toast({ title: data.message, variant: "destructive" })
-      }
-    } catch (error) {
+  const handleSave = async () => {
+    console.log(editedContent)
+
+    try{
+      if (!currentUser) {
+                navigate("/sign-in")
+                return
+              }
+      
+            const res = await fetch(`/api/comment/editComment`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                commentId: comment._id,
+                userId: currentUser._id,
+                content: editedContent
+              })
+            })
+            const data = await res.json()
+            if (res.ok) {
+              setIsEditing(false)
+              onEdit()
+              toast({ title: data.message , variant: "default" })
+            } else {
+              toast({ title: data.message, variant: "destructive" })
+            }
+   
+    }
+    catch(error){
       console.log(error)
       toast({ title: "Something went wrong", variant: "destructive" })
     }
   }
 
-  const handleEdit = async () => {
-
-  }
-
-
-  const handleLike = async () => {
-    try {
-      const res = await fetch(`/api/comment/likeComment`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          commentId: comment._id,
-          userId: currentUser._id
-        })
-      })
-      const data = await res.json()
-      if (res.ok) {
-        toast({ title: data.message , variant: "default" })
-      } else {
-        toast({ title: data.message, variant: "destructive" })
-      }
-    } catch (error) {
-      console.log(error)
-      toast({ title: "Something went wrong", variant: "destructive" })
-    }
-  }
   return (
     <div className='flex p-4 border-b border-slate-300 text-sm'>
       <div className='flex-shrink-0 mr-3'>
@@ -101,24 +105,104 @@ const Comment = ({ comment, onDelete }) => {
 
         </div>
 
-        <p className='text-sm text-gray-700'>
-          {comment.content}
-        </p>
+        {isEditing ? (
+          <>
+            <Textarea
+              className="mb-2"
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+            />
 
-        <div className='flex justify-between items-center mt-4 text-gray-500 text-sm border-t border-slate-300 w-52 pt-2'>
-          <button onClick={handleLike} >
+            <div className="flex justify-end gap-2 text-sm">
+              <Button
+                type="button"
+                className="bg-green-600"
+                onClick={handleSave}
+              >
+                Save
+              </Button>
 
-            <AiFillLike className={
-              `text-lg cursor-pointer hover:text-blue-500 transition-all duration-200 ease-in-out
-                ${comment && comment.likes.includes(currentUser._id) ? 'text-blue-500' : 'text-gray-400'}`
-            }></AiFillLike>
+              <Button
+                type="button"
+                className="hover:border-red-500 hover:text-red-500"
+                variant="outline"
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-slate-600 pb-2">{comment.content}</p>
 
-          </button>
-          <p>Like</p>
-          <button onClick={handleEdit}>Edit</button>
-          <button onClick={handleDelete} >Delete</button>
-        </div>
-      </div>
+            <div className="flex items-center pt-2 text-sm border-t border-slate-300 max-w-fit gap-2">
+              <button
+                type="button"
+                onClick={() => onLike(comment._id)}
+                className={`text-gray-400 hover:text-blue-500 ${
+                  currentUser &&
+                  comment.likes.includes(currentUser._id) &&
+                  "!text-blue-600"
+                }`}
+              >
+                <AiFillLike className="text-lg" />
+              </button>
+
+              <p className="text-gray-400">
+                {comment.numberOfLikes > 0 &&
+                  comment.numberOfLikes +
+                    " " +
+                    (comment.numberOfLikes === 1 ? "like" : "likes")}
+              </p>
+
+              {currentUser &&
+                (currentUser._id === comment.userId || currentUser.isAdmin) && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleEdit}
+                      className="text-gray-400 hover:text-green-600"
+                    >
+                      Edit
+                    </button>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <span className="text-gray-400 hover:text-red-600 cursor-pointer">
+                          Delete
+                        </span>
+                      </AlertDialogTrigger>
+
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your comment and remove your data from our
+                            servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-red-600"
+                            onClick={() => onDelete(comment._id)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </>
+                )}
+            </div>
+          </>
+        )}      </div>
 
     </div>
   )

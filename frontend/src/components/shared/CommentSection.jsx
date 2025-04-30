@@ -10,9 +10,9 @@ import { get } from 'react-hook-form'
 
 const CommentSection = (postId) => {
     const currentUser = useSelector((state) => state.user.currentUser)
+    // console.log(currentUser)
 
-
-    const [comment, setComment] = useState('')
+    const [comment, setComment] = useState([])
     const [error, setError] = useState('')
     const [allComment, setAllComment] = useState([])
 
@@ -60,6 +60,7 @@ const CommentSection = (postId) => {
 
    // ✅ Define getComments outside useEffect so it can be reused
    const getComments = async () => {
+    // console.log("Post ID:", postId.postId);
     try {
       const res = await fetch(`/api/comment/getPostComments/${postId.postId}`)
 
@@ -73,10 +74,84 @@ const CommentSection = (postId) => {
     }
   }
 
+
+
+  const handleDelete = async (comment_Id) => {
+    try {
+      if (!currentUser) {
+        navigate("/sign-in")
+
+        return
+      }
+      const res = await fetch(`/api/comment/deleteComment`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          commentId: comment_Id,
+          userId: currentUser._id
+        })
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setAllComment(prev => prev.filter(c => c._id !== comment_Id))
+
+        toast({ title: "Comment deleted successfully", variant: "default" })
+
+      } else {
+        toast({ title: data.message, variant: "destructive" })
+      }
+    } catch (error) {
+      console.log(error)
+      toast({ title: "Something went wrong", variant: "destructive" })
+    }
+  }
+
+  const handleEdit = async () => {
+    getComments()
+  }
+
+
+  const handleLike = async (comment_Id) => {
+    try {
+       if (!currentUser) {
+          navigate("/sign-in")
+          return
+        }
+
+      const res = await fetch(`/api/comment/likeComment`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          commentId: comment_Id,
+          userId: currentUser._id
+        })
+      })
+      const data = await res.json()
+      // console.log(data)
+      if (res.ok) {
+        setComment((prev) =>
+          prev.map((c) =>
+            c._id === comment_Id ? { ...c, likes: data.likes, numberOfLikes: data.likes.length } : c
+          )
+        );
+        toast({ title: data.message , variant: "default" })
+      } else {
+        toast({ title: data.message, variant: "destructive" })
+      }
+    } catch (error) {
+      console.log(error)
+      toast({ title: "Something went wrong", variant: "destructive" })
+    }
+  }
+
   // ✅ Call getComments when postId changes
   useEffect(() => {
     getComments()
-  }, [postId])
+  }, [postId.postId])
     return (
         <div className='max-w-3xl mx-auto w-full p-3'>
             {
@@ -146,7 +221,9 @@ const CommentSection = (postId) => {
             <Comment
               key={comment._id}
               comment={comment}
-              onDelete={getComments}  
+              onEdit={handleEdit}
+                onDelete={handleDelete}
+                onLike={handleLike}  
             />
           ))}
         </>
