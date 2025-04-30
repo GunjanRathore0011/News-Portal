@@ -50,39 +50,46 @@ exports.getPostComments = async (req, res) => {
 }
 
 // likes handler
-
 exports.likeComment = async (req, res) => {
-    try{
-        const {commentId, userId} = req.body;
-        if(!commentId || !userId){
-            return res.status(400).json({message: "Comment ID and User ID are required"});
-        }
-        const comment = await Comment.findById(commentId);
-        // console.log(comment);
-
-        if(comment.likes.includes(userId)){
-            // user already liked the comment, so we need to unlike it
-            comment.likes = comment.likes.filter((id) => id !== userId);
-            comment.numberOfLikes -= 1;
-        return res.status(200).json({message: "Comment unliked successfully", comment});
-
-        }
-        else{
-            // user has not liked the comment yet, so we need to like it
-            comment.likes.push(userId);
-            comment.numberOfLikes += 1;
-        return res.status(200).json({message: "Comment liked successfully", comment});
-
-        }
-        await comment.save();
-        return res.status(200).json({message: "Comment liked/unliked successfully", comment});
+    try {
+      const { commentId, userId } = req.body;
+      if (!commentId || !userId) {
+        return res.status(400).json({ message: "Comment ID and User ID are required" });
+      }
+  
+      const comment = await Comment.findById(commentId);
+      if (!comment) {
+        return res.status(404).json({ message: "Comment not found" });
+      }
+  
+      let message;
+  
+      if (comment.likes.includes(userId)) {
+        // User already liked the comment, so unlike it
+        comment.likes = comment.likes.filter((id) => id !== userId);
+        comment.numberOfLikes = Math.max(0, comment.numberOfLikes - 1); // prevent negative values
+        message = "Comment unliked successfully";
+      } else {
+        // User has not liked the comment yet, so like it
+        comment.likes.push(userId);
+        comment.numberOfLikes += 1;
+        message = "Comment liked successfully";
+      }
+  
+      await comment.save(); 
+  
+      return res.status(200).json({
+        message,
+        likes: comment.likes, 
+        numberOfLikes: comment.numberOfLikes
+      });
+  
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Internal server error" });
     }
-    catch(err){
-        console.log(err);
-        return res.status(500).json({message: "Internal server error"});
-    }
-}
-
+  };
+  
 // edit handler 
 exports.editComment = async (req, res) => {
     try{

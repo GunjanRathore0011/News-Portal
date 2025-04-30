@@ -113,40 +113,44 @@ const CommentSection = (postId) => {
   }
 
 
-  const handleLike = async (comment_Id) => {
+  const handleLike = async (commentId) => {
     try {
-       if (!currentUser) {
-          navigate("/sign-in")
-          return
-        }
+      if (!currentUser) {
+        navigate("/sign-in")
+        return
+      }
 
       const res = await fetch(`/api/comment/likeComment`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          commentId: comment_Id,
-          userId: currentUser._id
-        })
+          commentId: commentId,
+          userId: currentUser._id,
+        }),
       })
-      const data = await res.json()
-      // console.log(data)
+
       if (res.ok) {
-        setComment((prev) =>
-          prev.map((c) =>
-            c._id === comment_Id ? { ...c, likes: data.likes, numberOfLikes: data.likes.length } : c
+        const data = await res.json()
+
+        setAllComment(
+          allComment.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  numberOfLikes: data.likes.length,
+                }
+              : comment
           )
-        );
-        toast({ title: data.message , variant: "default" })
-      } else {
-        toast({ title: data.message, variant: "destructive" })
+        )
       }
     } catch (error) {
-      console.log(error)
-      toast({ title: "Something went wrong", variant: "destructive" })
+      console.log(error.message)
     }
   }
+
 
   // ✅ Call getComments when postId changes
   useEffect(() => {
