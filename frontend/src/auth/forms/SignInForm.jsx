@@ -38,7 +38,7 @@ const SignInForm = () => {
   const navigate = useNavigate();
   const dispatch=useDispatch();
   const {loading,error}=useSelector((state)=>state.user);
-
+  const API_BASE = import.meta.env.VITE_API_URL;
   // const [loading, setLoading] = useState(false);
   // const [errMessage, setErrMessage] = useState(null);
   // // 1. Define your form.
@@ -58,8 +58,9 @@ const SignInForm = () => {
       // setErrMessage(null);
       dispatch(signInStart());
       // console.log("Api call huii..");
-      const res = await fetch("/api/v1/signin", {
+      const res = await fetch(`${API_BASE}/v1/signin`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },

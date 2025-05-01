@@ -37,6 +37,8 @@ const SignUpForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errMessage, setErrMessage] = useState(null);
+  const API_BASE = import.meta.env.VITE_API_URL;
+
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -53,8 +55,9 @@ const SignUpForm = () => {
       setLoading(true);
       setErrMessage(null);
 
-      const res = await fetch("/api/v1/signup", {
+      const res = await fetch(`${API_BASE}/v1/signup`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },
