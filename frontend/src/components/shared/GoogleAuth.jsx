@@ -10,6 +10,9 @@ const GoogleAuth = () => {
     const { toast } = useToast();
     const dispatch=useDispatch();
     const navigate = useNavigate();
+    const API_BASE = import.meta.env.VITE_API_URL;
+
+
   const auth = getAuth(app)
   const handleGoogleClick = async () => {
     const provider = new GoogleAuthProvider()
@@ -24,7 +27,7 @@ const GoogleAuth = () => {
         password: firebaseResponse.user.uid,
         profilePicture: firebaseResponse.user.photoURL,
       }
-      const res = await fetch("/api/v1/google", {
+      const res = await fetch(`${API_BASE}/v1/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

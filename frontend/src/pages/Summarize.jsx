@@ -10,12 +10,15 @@ export default function Summarize() {
   const [factCheck, setFactCheck] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const API_BASE = import.meta.env.VITE_API_URL;
+
+
   const handleAnalyze =async () => {
     setLoading(true);
 
     // Mocked Response after 2 seconds (you'll later replace it with real API call)
     setTimeout(async () => {
-      const res = await fetch("/api/summarize", {
+      const res = await fetch(`${API_BASE}/summarize`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

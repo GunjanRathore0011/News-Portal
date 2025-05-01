@@ -20,6 +20,9 @@ const Header = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const API_BASE = import.meta.env.VITE_API_URL;
+
+
   const {toast}=useToast();
   const { currentUser } = useSelector((state) => state.user)
 
@@ -38,7 +41,7 @@ const Header = () => {
 
   const signOutHandler = async () => {
     try {
-      const res = await fetch("/api/user/signOut", {
+      const res = await fetch(`${API_BASE}/user/signOut`, {
         method: "DELETE"
       })
 

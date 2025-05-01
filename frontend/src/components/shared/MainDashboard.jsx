@@ -20,6 +20,9 @@ const MainDashboard = () => {
 
     const { currentUser } = useSelector((state) => state.user)
 
+    const API_BASE = import.meta.env.VITE_API_URL;
+
+
     const [users, setUsers] = useState([])
     const [posts, setPosts] = useState([])
     const [comments, setComments] = useState([])
@@ -39,7 +42,7 @@ const MainDashboard = () => {
     useEffect(() => {
         const fetchUsers = async () => {
           try {
-            const res = await fetch("/api/user/getusers?limit=5")
+            const res = await fetch(`${API_BASE}/user/getusers?limit=5`)
     
             const data = await res.json()
     
@@ -55,7 +58,7 @@ const MainDashboard = () => {
     
         const fetchPosts = async () => {
           try {
-            const res = await fetch("/api/post/getposts?limit=5")
+            const res = await fetch(`${API_BASE}/post/getposts?limit=5`)
     
             const data = await res.json()
     
@@ -71,7 +74,7 @@ const MainDashboard = () => {
     
         const fetchComments = async () => {
           try {
-            const res = await fetch("/api/comment/getcomments?limit=5")
+            const res = await fetch(`${API_BASE}/comment/getcomments?limit=5`)
     
             const data = await res.json()
     

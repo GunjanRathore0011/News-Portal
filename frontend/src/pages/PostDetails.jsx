@@ -16,6 +16,10 @@ const PostDetails = () => {
   const [post, setPost] = useState(null)
   const [recentArticles, setRecentArticles] = useState(null)
 
+  const API_BASE = import.meta.env.VITE_API_URL;
+
+
+
   // console.log(recentArticles)
 
   // console.log(post)
@@ -25,7 +29,7 @@ const PostDetails = () => {
       try {
         setLoading(true)
 
-        const res = await fetch(`/api/post/getposts?slug=${postSlug}`)
+        const res = await fetch(`${API_BASE}/post/getposts?slug=${postSlug}`)
 
         const data = await res.json()
 
@@ -53,7 +57,7 @@ const PostDetails = () => {
   useEffect(() => {
     try {
       const fetchRecentPosts = async () => {
-        const res = await fetch(`/api/post/getposts?limit=3`)
+        const res = await fetch(`${API_BASE}/post/getposts?limit=3`)
 
         const data = await res.json()
 

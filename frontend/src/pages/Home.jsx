@@ -7,12 +7,13 @@ import { Link } from "react-router-dom"
 
 const Home = () => {
   const [posts, setPosts] = useState([])
+  const API_BASE = import.meta.env.VITE_API_URL;
 
   // console.log(posts)
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch("/api/post/getPosts?limit=8")
+      const res = await fetch(`${API_BASE}/post/getPosts?limit=8`)
 
       const data = await res.json()
 

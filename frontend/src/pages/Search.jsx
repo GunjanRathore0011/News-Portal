@@ -17,6 +17,8 @@ import { useLocation, useNavigate } from "react-router-dom"
 const Search = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const API_BASE = import.meta.env.VITE_API_URL;
+
 
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
@@ -29,6 +31,9 @@ const Search = () => {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(false)
   const [showMore, setShowMore] = useState(false)
+
+  // const API_BASE = import.meta.env.VITE_API_URL;
+
 
   // console.log(posts)
 
@@ -55,7 +60,7 @@ const Search = () => {
 
       const searchQuery = urlParams.toString()
 
-      const res = await fetch(`/api/post/getposts?${searchQuery}`)
+      const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`)
 
       if (!res.ok) {
         setLoading(false)
@@ -107,7 +112,7 @@ const Search = () => {
 
     const searchQuery = urlParams.toString()
 
-    const res = await fetch(`/api/post/getposts?${searchQuery}`)
+    const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`)
 
     if (!res.ok) {
       return

@@ -3,6 +3,20 @@ const app=express();
 require("dotenv").config();
 const dbconnect=require("./config/database");
 const cookieParser=require("cookie-parser");
+const cors=require("cors");
+
+
+const allowedOrigins = [
+    "http://localhost:5173", // For local dev
+    // "https://your-frontend-url.onrender.com", // Replace with actual frontend render URL
+  ];
+  
+  app.use(
+    cors({
+      origin: allowedOrigins,
+      credentials: true, // Enable if using cookies
+    })
+  );
 
 // port number
 const PORT=process.env.PORT;

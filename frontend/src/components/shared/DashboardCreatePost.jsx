@@ -12,6 +12,8 @@ export default function DashboardCreatePost() {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState(""); 
   const [category, setCategory] = useState("");
+  const API_BASE = import.meta.env.VITE_API_URL;
+
 
   const handleImageChange = (e) => setImage(e.target.files[0]);
 
@@ -28,7 +30,7 @@ export default function DashboardCreatePost() {
     formData.append("image", image);
 
     try {
-      const res = await fetch("/api/post/create", {
+      const res = await fetch(`${API_BASE}/post/create`, {
         method: "POST",
         body: formData,
       });

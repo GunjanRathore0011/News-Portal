@@ -9,13 +9,16 @@ export default function FakeNews() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const API_BASE = import.meta.env.VITE_API_URL;
+
+
   const handleCheck = async () => {
     setLoading(true);
     setError("");
     setVerdict(null);
 
     try {
-      const response = await fetch("/api/fakeNewsCheck", {
+      const response = await fetch(`${API_BASE}/fakeNewsCheck`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -31,11 +31,12 @@ const DashboardComments = () => {
 
   const [showMore, setShowMore] = useState(true)
   const [commentIdToDelete, setCommentIdToDelete] = useState("")
+  const API_BASE = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/api/comment/getcomments`)
+        const res = await fetch(`${API_BASE}/comment/getcomments`)
 
         const data = await res.json()
 
@@ -61,7 +62,7 @@ const DashboardComments = () => {
 
     try {
       const res = await fetch(
-        `/api/comment/getComments?startIndex=${startIndex}`
+        `${API_BASE}/comment/getComments?startIndex=${startIndex}`
       )
 
       const data = await res.json()
@@ -80,7 +81,7 @@ const DashboardComments = () => {
 
   const handleDeleteComment = async () => {
     try {
-        const res = await fetch(`/api/comment/deleteComment`, {
+        const res = await fetch(`${API_BASE}/comment/deleteComment`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json'

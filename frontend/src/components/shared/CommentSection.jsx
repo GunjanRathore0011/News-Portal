@@ -15,7 +15,7 @@ const CommentSection = (postId) => {
     const [comment, setComment] = useState([])
     const [error, setError] = useState('')
     const [allComment, setAllComment] = useState([])
-
+    const API_BASE = import.meta.env.VITE_API_URL;
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -28,7 +28,7 @@ const CommentSection = (postId) => {
             return
         }
         try {
-            const res = await fetch('/api/comment/create', {
+            const res = await fetch(`${API_BASE}/comment/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ const CommentSection = (postId) => {
    const getComments = async () => {
     // console.log("Post ID:", postId.postId);
     try {
-      const res = await fetch(`/api/comment/getPostComments/${postId.postId}`)
+      const res = await fetch(`${API_BASE}/comment/getPostComments/${postId.postId}`)
 
       if (res.ok) {
         const data = await res.json()
@@ -83,7 +83,7 @@ const CommentSection = (postId) => {
 
         return
       }
-      const res = await fetch(`/api/comment/deleteComment`, {
+      const res = await fetch(`${API_BASE}/comment/deleteComment`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -120,7 +120,7 @@ const CommentSection = (postId) => {
         return
       }
 
-      const res = await fetch(`/api/comment/likeComment`, {
+      const res = await fetch(`${API_BASE}/comment/likeComment`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -35,6 +35,7 @@ const DashboardPosts = () => {
   const [userPosts, setUserPosts] = useState([])
   // console.log(userPosts)
   const [showMore, setShowMore] = useState(true)
+  const API_BASE = import.meta.env.VITE_API_URL;
 
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const DashboardPosts = () => {
 
       // console.log("yeh h current user ",currentUser)
 
-      const res = await fetch(`/api/post/getPosts?userId=${currentUser._id}`)
+      const res = await fetch(`${API_BASE}/post/getPosts?userId=${currentUser._id}`)
 
       const data = await res.json()
       // console.log(data)
@@ -69,7 +70,7 @@ const DashboardPosts = () => {
     const startIndex = userPosts.length
 
     try {
-      const res = await fetch(`api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`)
+      const res = await fetch(`${API_BASE}/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`)
 
       // console.log(startIndex)
       const data = await res.json()
@@ -96,7 +97,7 @@ const DashboardPosts = () => {
 
     // console.log(token)
     try {
-      const res = await fetch(`api/post/deletePost/${postId}`, { 
+      const res = await fetch(`${API_BASE}/post/deletePost/${postId}`, { 
         method: "DELETE", 
         headers: { "Content-Type": "application/json" }
       });

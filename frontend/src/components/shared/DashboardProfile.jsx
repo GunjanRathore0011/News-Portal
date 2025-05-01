@@ -56,6 +56,9 @@ const DashboardProfile = () => {
     const { toast } = useToast();
     const dispatch = useDispatch();
 
+    const API_BASE = import.meta.env.VITE_API_URL;
+
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -71,7 +74,7 @@ const DashboardProfile = () => {
 
             const userId = currentUser._id;
             // console.log(userId);
-            const res = await fetch(`/api/user/update/${userId}`, {
+            const res = await fetch(`${API_BASE}/user/update/${userId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -101,7 +104,7 @@ const DashboardProfile = () => {
 
         dispatch(deleteStart());
         const userId = currentUser._id;
-        const res = await fetch(`/api/user/delete/${userId}`, {
+        const res = await fetch(`${API_BASE}/user/delete/${userId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
@@ -123,7 +126,7 @@ const DashboardProfile = () => {
 
     const signOutHandler = async () => {
         try {
-            const res=await fetch("/api/user/signOut",{
+            const res=await fetch(`${API_BASE}/user/signOut`,{
                 method: "DELETE"
             })
 

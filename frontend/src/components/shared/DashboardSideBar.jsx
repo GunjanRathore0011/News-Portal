@@ -12,13 +12,14 @@ import { FaUsers } from "react-icons/fa6";
 
 const DashboardSideBar = () => {
   const { currentUser } = useSelector((state) => state.user)
+  const API_BASE = import.meta.env.VITE_API_URL;
 
   const dispatch = useDispatch();
   const { toast } = useToast();
 
   const signOutHandler = async () => {
     try {
-      const res = await fetch("/api/user/signOut", {
+      const res = await fetch(`${API_BASE}/user/signOut`, {
         method: "DELETE"
       })
 

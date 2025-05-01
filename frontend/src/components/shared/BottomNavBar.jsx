@@ -11,26 +11,28 @@ const BottomNavBar = () => {
     const dispatch = useDispatch();
     const { toast } = useToast();
     const { currentUser } = useSelector((state) => state.user);
-    const signOutHandler = async () => {
-        try {
-            const res = await fetch("/api/user/signOut", {
-                method: "DELETE"
-            })
+    const API_BASE = import.meta.env.VITE_API_URL;
 
-            const data = await res.json();
+const signOutHandler = async () => {
+    try {
+        const res = await fetch(`${API_BASE}/user/signOut`, {
+            method: "DELETE",
+            credentials: "include", // Optional: include if using cookies
+        });
 
-            if (res.ok) {
-                dispatch(signOutSuccess());
-                toast({ title: data.message })
-            }
-            else {
-                toast({ title: data.message });
-            }
+        const data = await res.json();
+
+        if (res.ok) {
+            dispatch(signOutSuccess());
+            toast({ title: data.message });
+        } else {
+            toast({ title: data.message });
         }
-        catch (error) {
-            console.log("Error in signout", error);
-        }
+    } catch (error) {
+        console.error("Error in signOut:", error);
     }
+};
+
 
     return (
         <nav className='md:hidden fixed bottom-0 left-0 right-0 bg-slate-200 border-t border-gray-300 p-2 flex justify-around items-center'>

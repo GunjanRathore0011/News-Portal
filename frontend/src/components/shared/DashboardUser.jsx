@@ -38,10 +38,13 @@ const DashboardUser = () => {
     const { toast } = useToast();
     const dispatch = useDispatch();
 
+    const API_BASE = import.meta.env.VITE_API_URL;
+
+
     const [allUser, setAllUser] = useState([])
     const userHandler=async()=>{
         try{
-            const res = await fetch("/api/user/getUsers", {
+            const res = await fetch(`${API_BASE}/user/getUsers`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -73,7 +76,7 @@ const DashboardUser = () => {
     const deleteHandler = async (userId) => {
       // alert("clicked")
         dispatch(deleteStart());
-        const res = await fetch(`/api/user/deleteUser/${userId}`, {
+        const res = await fetch(`${API_BASE}/user/deleteUser/${userId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"

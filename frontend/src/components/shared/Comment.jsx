@@ -24,13 +24,13 @@ const Comment = ({ comment, onDelete ,onEdit, onLike}) => {
   const [user, setUser] = useState({})
   const [isEditing, setIsEditing] = useState(false)
   const [editedContent, setEditedContent] = useState(comment.content)
-
+  const API_BASE = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const getUser = async () => {
       // console.log("function called")
       try {
-        const res = await fetch(`/api/user/getUser/${comment.userId}`)
+        const res = await fetch(`${API_BASE}/user/getUser/${comment.userId}`)
 
         if (res.ok) {
           const data = await res.json()
@@ -59,7 +59,7 @@ const Comment = ({ comment, onDelete ,onEdit, onLike}) => {
                 return
               }
       
-            const res = await fetch(`/api/comment/editComment`, {
+            const res = await fetch(`${API_BASE}/comment/editComment`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json'
