@@ -20,7 +20,8 @@ const DashboardSideBar = () => {
   const signOutHandler = async () => {
     try {
       const res = await fetch(`${API_BASE}/user/signOut`, {
-        method: "DELETE"
+        method: "DELETE",
+        credentials: "include", // Optional: include if using cookies
       })
 
       const data = await res.json();

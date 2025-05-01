@@ -29,7 +29,9 @@ const PostDetails = () => {
       try {
         setLoading(true)
 
-        const res = await fetch(`${API_BASE}/post/getposts?slug=${postSlug}`)
+        const res = await fetch(`${API_BASE}/post/getposts?slug=${postSlug}`,{
+          credentials: "include",
+        })
 
         const data = await res.json()
 
@@ -57,7 +59,13 @@ const PostDetails = () => {
   useEffect(() => {
     try {
       const fetchRecentPosts = async () => {
-        const res = await fetch(`${API_BASE}/post/getposts?limit=3`)
+        const res = await fetch(`${API_BASE}/post/getposts?limit=3`,{
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
 
         const data = await res.json()
 

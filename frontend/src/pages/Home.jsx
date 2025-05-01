@@ -13,7 +13,10 @@ const Home = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch(`${API_BASE}/post/getPosts?limit=8`)
+      const res = await fetch(`${API_BASE}/post/getPosts?limit=8`, {
+        credentials: 'include', // <-- Required for CORS with cookies
+      });
+  
 
       const data = await res.json()
 

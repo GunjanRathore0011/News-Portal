@@ -32,6 +32,7 @@ export default function DashboardCreatePost() {
     try {
       const res = await fetch(`${API_BASE}/post/create`, {
         method: "POST",
+        credentials: "include",
         body: formData,
       });
 

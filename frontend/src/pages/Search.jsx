@@ -60,7 +60,13 @@ const Search = () => {
 
       const searchQuery = urlParams.toString()
 
-      const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`)
+      const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`,{
+        credentials: "include",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
 
       if (!res.ok) {
         setLoading(false)
@@ -112,7 +118,13 @@ const Search = () => {
 
     const searchQuery = urlParams.toString()
 
-    const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`)
+    const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`,{
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
 
     if (!res.ok) {
       return

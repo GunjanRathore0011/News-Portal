@@ -46,6 +46,7 @@ const DashboardUser = () => {
         try{
             const res = await fetch(`${API_BASE}/user/getUsers`, {
                 method: "GET",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -78,6 +79,7 @@ const DashboardUser = () => {
         dispatch(deleteStart());
         const res = await fetch(`${API_BASE}/user/deleteUser/${userId}`, {
             method: "DELETE",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },

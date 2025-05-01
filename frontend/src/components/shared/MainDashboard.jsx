@@ -42,7 +42,13 @@ const MainDashboard = () => {
     useEffect(() => {
         const fetchUsers = async () => {
           try {
-            const res = await fetch(`${API_BASE}/user/getusers?limit=5`)
+            const res = await fetch(`${API_BASE}/user/getusers?limit=5`,{
+              method: "GET",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
     
             const data = await res.json()
     
@@ -58,7 +64,13 @@ const MainDashboard = () => {
     
         const fetchPosts = async () => {
           try {
-            const res = await fetch(`${API_BASE}/post/getposts?limit=5`)
+            const res = await fetch(`${API_BASE}/post/getposts?limit=5`,{
+              method: "GET",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
     
             const data = await res.json()
     
@@ -74,7 +86,13 @@ const MainDashboard = () => {
     
         const fetchComments = async () => {
           try {
-            const res = await fetch(`${API_BASE}/comment/getcomments?limit=5`)
+            const res = await fetch(`${API_BASE}/comment/getcomments?limit=5`,{
+              method: "GET",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
     
             const data = await res.json()
     

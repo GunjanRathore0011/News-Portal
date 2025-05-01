@@ -76,6 +76,7 @@ const DashboardProfile = () => {
             // console.log(userId);
             const res = await fetch(`${API_BASE}/user/update/${userId}`, {
                 method: "PUT",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -106,6 +107,7 @@ const DashboardProfile = () => {
         const userId = currentUser._id;
         const res = await fetch(`${API_BASE}/user/delete/${userId}`, {
             method: "DELETE",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -127,7 +129,11 @@ const DashboardProfile = () => {
     const signOutHandler = async () => {
         try {
             const res=await fetch(`${API_BASE}/user/signOut`,{
-                method: "DELETE"
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
             })
 
             const data = await res.json();

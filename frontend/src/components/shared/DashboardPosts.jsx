@@ -48,7 +48,10 @@ const DashboardPosts = () => {
 
       // console.log("yeh h current user ",currentUser)
 
-      const res = await fetch(`${API_BASE}/post/getPosts?userId=${currentUser._id}`)
+      const res = await fetch(`${API_BASE}/post/getPosts?userId=${currentUser._id}`,{
+        credentials: "include",
+        method: "GET",
+      })
 
       const data = await res.json()
       // console.log(data)
@@ -70,7 +73,13 @@ const DashboardPosts = () => {
     const startIndex = userPosts.length
 
     try {
-      const res = await fetch(`${API_BASE}/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`)
+      const res = await fetch(`${API_BASE}/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`,{
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
 
       // console.log(startIndex)
       const data = await res.json()
@@ -99,6 +108,7 @@ const DashboardPosts = () => {
     try {
       const res = await fetch(`${API_BASE}/post/deletePost/${postId}`, { 
         method: "DELETE", 
+        credentials: "include",
         headers: { "Content-Type": "application/json" }
       });
   

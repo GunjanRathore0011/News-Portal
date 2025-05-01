@@ -29,6 +29,7 @@ const GoogleAuth = () => {
       }
       const res = await fetch(`${API_BASE}/v1/google`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },

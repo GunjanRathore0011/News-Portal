@@ -20,6 +20,7 @@ export default function Summarize() {
     setTimeout(async () => {
       const res = await fetch(`${API_BASE}/summarize`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

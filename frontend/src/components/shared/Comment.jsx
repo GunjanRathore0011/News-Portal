@@ -30,7 +30,9 @@ const Comment = ({ comment, onDelete ,onEdit, onLike}) => {
     const getUser = async () => {
       // console.log("function called")
       try {
-        const res = await fetch(`${API_BASE}/user/getUser/${comment.userId}`)
+        const res = await fetch(`${API_BASE}/user/getUser/${comment.userId}`,{
+          credentials: "include",
+        })
 
         if (res.ok) {
           const data = await res.json()
@@ -61,6 +63,7 @@ const Comment = ({ comment, onDelete ,onEdit, onLike}) => {
       
             const res = await fetch(`${API_BASE}/comment/editComment`, {
               method: 'PUT',
+              credentials: "include",
               headers: {
                 'Content-Type': 'application/json'
               },
