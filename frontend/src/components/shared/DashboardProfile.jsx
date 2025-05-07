@@ -83,7 +83,7 @@ const DashboardProfile = () => {
                 body: JSON.stringify(values),
             });
             const data = await res.json();
-            // console.log(data);
+            console.log(data);
             if (!res.ok) {
                 toast({ title: data.message })
                 dispatch(updateFailure(data.message))
@@ -111,7 +111,7 @@ const DashboardProfile = () => {
             headers: {
                 "Content-Type": "application/json"
             },
-        })
+        }) 
 
         const data = await res.json();
 

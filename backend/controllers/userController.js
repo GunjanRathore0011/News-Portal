@@ -99,6 +99,9 @@ exports.signin = async (req, res) => {
             const options = {
                 expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
                 httpOnly: true,
+                sameSite: "None", // Required for cross-site cookie on HTTPS
+  secure: true      // Must be true for HTTPSon",
+
             }
             res.cookie("token", token, options)
                 .status(200).json({
@@ -141,17 +144,26 @@ exports.google = async (req, res) => {
                 isAdmin: user.isAdmin
             };
 
+            console.log( "payload",payload);
+
             let token = jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: "2h"
             })
+
+            console.log("token", token);
+
             user = user.toObject();
             user.token = token;
             user.password = undefined;
+
+            console.log("user", user);
             const options = {
                 expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
                 httpOnly: true,
-                secure: true,          // Required for HTTPS (Render uses HTTPS)
-                sameSite: 'None',      // Required for cross-origin cookies
+                sameSite: "None", // Required for cross-site cookie on HTTPS
+  secure: true      // Must be true for HTTPS
+                
+                
               };
               return res.cookie("token", token, options)
               .status(200).json({

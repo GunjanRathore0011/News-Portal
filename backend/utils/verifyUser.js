@@ -4,12 +4,14 @@ const User = require("../models/userModel")
 //auth 
 exports.verifyUser = async (req, res, next) => {
     try {
-        
+        console.log("Inside verifyUser middleware");
+        console.log(req.cookies.token);
+
         const token = req.cookies.token
             || req.body.token
             || req.header("Authorisation").replace("Bearer ", "");
         
-            // console.log(token)
+            console.log(token)
         if (!token) {
             return res.status(402).json({
                 success: false,
@@ -24,9 +26,9 @@ exports.verifyUser = async (req, res, next) => {
         // verify the token and pass the token in req body
         try {
             const decode = jwt.verify(token, process.env.JWT_SECRET);
-            // console.log("It is decode ",decode);
+            console.log("It is decode ",decode);
             req.user = decode;
-            // console.log(req.user.id);
+            console.log(req.user.id);
         }
 
 
