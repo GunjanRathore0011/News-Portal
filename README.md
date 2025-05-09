@@ -49,7 +49,6 @@ This platform also integrates **AI-powered features** such as **fake news detect
 ### 📄 Additional Pages
 - About Page
 - All News Listing Page
-- Contact Page (optional)
 
 ---
 
