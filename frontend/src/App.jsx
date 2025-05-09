@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import SignInForm from "./auth/forms/SignInForm"
 import SignUpForm from "./auth/forms/SignUpForm"
@@ -17,11 +17,15 @@ import ScrollToTop from "./components/shared/ScrollToTop"
 import Search from "./pages/Search"
 import FakeNews from "./pages/FakeNews"
 import Summarize from "./pages/Summarize"
-
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 
 function App() {
-
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+  
   return (
     <BrowserRouter>
       <Header></Header>

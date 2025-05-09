@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue
 } from "@/components/ui/select";
+import { set } from 'zod';
 
 export default function DashboardCreatePost() {
   const [content, setContent] = useState("");
@@ -13,7 +14,7 @@ export default function DashboardCreatePost() {
   const [title, setTitle] = useState(""); 
   const [category, setCategory] = useState("");
   const API_BASE = import.meta.env.VITE_API_URL;
-
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => setImage(e.target.files[0]);
 
@@ -28,6 +29,8 @@ export default function DashboardCreatePost() {
     formData.append("category", category);
     formData.append("content", content);
     formData.append("image", image);
+    
+    setLoading(true);
 
     try {
       const res = await fetch(`${API_BASE}/post/create`, {
@@ -48,6 +51,9 @@ export default function DashboardCreatePost() {
       } else {
         alert("Failed to create post: " + data.message);
       }
+
+      setLoading(false);
+
     } catch (error) {
       console.error("Upload error:", error);
       alert("An error occurred while uploading the post.");
@@ -77,9 +83,9 @@ export default function DashboardCreatePost() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="tech">Tech News</SelectItem>
-                  <SelectItem value="startups">Startups</SelectItem>
-                  <SelectItem value="ai">AI & Cybersecurity</SelectItem>
+                  <SelectItem value="Tech News">Tech News</SelectItem>
+                  <SelectItem value="Startups">Startups</SelectItem>
+                  <SelectItem value="AI & Cybersecurity">AI & Cybersecurity</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -103,7 +109,7 @@ export default function DashboardCreatePost() {
 
           <Button className="bg-yellow-400 hover:bg-yellow-500 text-black w-full"
             onClick={handleUploadPost}>
-            Publish Post
+            {loading ? "Creating Post..." : "Publish Post"}
           </Button>
 
         </CardContent>

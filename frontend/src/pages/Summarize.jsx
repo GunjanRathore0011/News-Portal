@@ -40,7 +40,7 @@ export default function Summarize() {
      
       {/* Main Content */}
       <main className="max-w-4xl mx-auto py-10 px-4">
-        <h2 className="text-3xl font-bold text-center mb-6">News Summarizer </h2>
+        <h2 className="text-3xl font-bold text-center mb-6">🗞 News Summarizer </h2>
 
         {/* Input Section */}
         <div className="bg-white rounded-2xl shadow-md p-6">

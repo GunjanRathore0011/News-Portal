@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { refresh } from 'aos'
 import { signOut } from 'firebase/auth'
 import { Satellite } from 'lucide-react'
 import { act } from 'react'
@@ -26,7 +27,10 @@ export const userSlice = createSlice({
       state.loading = false
       state.error = action.payload
     },
-
+      refreshError: (state) => {
+      state.loading = false ,
+      state.error = null
+    },
     updateStart: (state) => {
       state.loading = true
       state.error = null
@@ -92,7 +96,8 @@ export const { signInFailure,
   signOutSuccess, 
   deletePostFailure,
   deletePostStart,
-  deletePostSuccess
+  deletePostSuccess,
+  refreshError
 
 } = userSlice.actions
 

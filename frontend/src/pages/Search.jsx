@@ -35,7 +35,7 @@ const Search = () => {
   // const API_BASE = import.meta.env.VITE_API_URL;
 
 
-  // console.log(posts)
+  // console.log(showMore)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search)
@@ -60,7 +60,7 @@ const Search = () => {
 
       const searchQuery = urlParams.toString()
 
-      const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`,{
+      const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`, {
         credentials: "include",
         method: "GET",
         headers: {
@@ -78,7 +78,7 @@ const Search = () => {
         setPosts(data.posts)
         setLoading(false)
 
-        if (data.posts.length === 9) {
+        if (data.posts.length >= 6) {
           setShowMore(true)
         } else {
           setShowMore(false)
@@ -118,7 +118,7 @@ const Search = () => {
 
     const searchQuery = urlParams.toString()
 
-    const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`,{
+    const res = await fetch(`${API_BASE}/post/getposts?${searchQuery}`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -206,9 +206,9 @@ const Search = () => {
                 <SelectGroup>
                   <SelectLabel>Category:</SelectLabel>
 
-                  <SelectItem value="worldnews">World News</SelectItem>
-                  <SelectItem value="sportsnews">Sports News</SelectItem>
-                  <SelectItem value="localnews">Local News</SelectItem>
+                  <SelectItem value="Tech News">Tech News</SelectItem>
+                  <SelectItem value="Startups">Startups</SelectItem>
+                  <SelectItem value="AI & Cybersecurity">AI & Cybersecurity</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>

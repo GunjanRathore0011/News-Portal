@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useToast } from '@/hooks/use-toast'
 import { Title } from '@radix-ui/react-toast'
-import { signInFailure, signInStart, signInSuccess } from '@/redux/user/userSlice'
+import {  refreshError, signInFailure, signInStart, signInSuccess } from '@/redux/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import GoogleAuth from '@/components/shared/GoogleAuth'
 
@@ -92,9 +92,11 @@ const SignInForm = () => {
       toast({ title: "Something went wrong." })
       // setLoading(false);
       dispatch(signInFailure(error.message));
+      navigate("/sign-up")
     }
   }
 
+  useEffect(() => { dispatch(refreshError())},[])
   return (
     <div className='min-h-screen mt-20'>
       <div className='flex p-3 max-w-3xl sm:max-w-5xl mx-auto flex-col md:flex-row md:items-center gap-5 '>

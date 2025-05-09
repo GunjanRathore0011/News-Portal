@@ -130,7 +130,7 @@ const DashboardPosts = () => {
   }
 
   return (
-    <div >
+    <div>
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <>
           <Table>
@@ -142,7 +142,7 @@ const DashboardPosts = () => {
                 <TableHead>Post Title</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Delete</TableHead>
-                <TableHead>Edit</TableHead>
+                {/* <TableHead>Edit</TableHead> */}
               </TableRow> 
             </TableHeader>
 
@@ -181,14 +181,14 @@ const DashboardPosts = () => {
                       </AlertDialogContent>
                     </AlertDialog>
                   </TableCell>
-                  <TableCell className="font-medium">
+                  {/* <TableCell className="font-medium">
                     <Link to={`/update-post/${post._id}`}>
                       <button className=" text-green-500 hover:underline">
                         Edit
                       </button></Link>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
-              </TableBody>
+              </TableBody> 
             ))}
 
           </Table>
@@ -199,7 +199,7 @@ const DashboardPosts = () => {
           }
         </>
       ) :
-        (<p>You have no posts yet!</p>)}
+        (<p className='flex justify-center pt-9'>You have no posts yet!</p>)}
     </div>
   )
 }

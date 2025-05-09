@@ -103,11 +103,14 @@ const PostDetails = () => {
         <Button variant='outline' className='border border-slate-500'>{post && post.category}</Button>
       </Link>
 
-      <img
-        src={post && post.image}
-        alt={post && post.title}
-        className='mt-10 p-3 max-h-[500px] w-full object-cover'
-      ></img>
+    <div className="mt-10 h-[500px] overflow-hidden">
+  <img
+    src={post && post.image}
+    alt={post && post.title}
+    className="w-full h-full object-cover"
+  />
+</div>
+
 
       <div className='flex justify-between mx-auto w-full max-w-2xl text-xs p-3'>
 
@@ -122,7 +125,7 @@ const PostDetails = () => {
       </div>
 
       <Separator className='bg-slate-500' />
-      <div className='p-3  max-w-3xl w-full mx-auto'>
+      <div className='p-3  max-w-3xl w-full mx-auto mb-10 mt-5 text-slate-700'>
         {/* dangerouslySetInnerHTML={{ __html: post && post.content }} */}
         {post && post.content}
       </div>
